@@ -3,19 +3,20 @@
 
 import PackageDescription
 
+// swiftlint:disable all
 let package = Package(
-    name: "Spark___COMPONENT_NAME___",
+    name: "SparkTextLink",
     platforms: [
         .iOS(.v15)
     ],
     products: [
         .library(
-            name: "Spark___COMPONENT_NAME___",
-            targets: ["Spark___COMPONENT_NAME___"]
+            name: "SparkTextLink",
+            targets: ["SparkTextLink"]
         ),
         .library(
-            name: "Spark___COMPONENT_NAME___Testing",
-            targets: ["Spark___COMPONENT_NAME___Testing"]
+            name: "SparkTextLinkTesting",
+            targets: ["SparkTextLinkTesting"]
         )
     ],
     dependencies: [
@@ -32,65 +33,69 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Spark___COMPONENT_NAME___",
+            name: "SparkTextLink",
             dependencies: [
                 .product(
                     name: "SparkCommon",
-                    package: "spm-poc-common"
+                    package: "spark-ios-common"
                 ),
                 .product(
                     name: "SparkTheming",
-                    package: "spm-poc-theming"
+                    package: "spark-ios-theming"
                 )
-            ]
+            ],
+            path: "Sources/Core"
         ),
         .target(
-            name: "Spark___COMPONENT_NAME___Testing",
+            name: "SparkTextLinkTesting",
             dependencies: [
-                "Spark___COMPONENT_NAME___",
+                "SparkTextLink",
                 .product(
                     name: "SparkCommon",
-                    package: "spm-poc-common"
+                    package: "spark-ios-common"
                 ),
                 .product(
                     name: "SparkCommonTesting",
-                    package: "spm-poc-common"
+                    package: "spark-ios-common"
                 ),
                 .product(
                     name: "SparkThemingTesting",
-                    package: "spm-poc-theming"
+                    package: "spark-ios-theming"
                 ),
                 .product(
                     name: "SparkTheme",
-                    package: "spm-poc-theming"
+                    package: "spark-ios-theming"
                 )
-            ]
+            ],
+            path: "Sources/Testing"
         ),
         .testTarget(
-            name: "Spark___COMPONENT_NAME___UnitTests",
+            name: "SparkTextLinkUnitTests",
             dependencies: [
-                "Spark___COMPONENT_NAME___",
-                "Spark___COMPONENT_NAME___Testing",
+                "SparkTextLink",
+                "SparkTextLinkTesting",
                 .product(
                     name: "SparkCommonTesting",
-                    package: "spm-poc-common"
+                    package: "spark-ios-common"
                 ),
                 .product(
                     name: "SparkThemingTesting",
-                    package: "spm-poc-theming"
+                    package: "spark-ios-theming"
                 )
-            ]
+            ],
+            path: "Tests/UnitTests"
         ),
         .testTarget(
-            name: "Spark___COMPONENT_NAME___SnapshotTests",
+            name: "SparkTextLinkSnapshotTests",
             dependencies: [
-                "Spark___COMPONENT_NAME___",
-                "Spark___COMPONENT_NAME___Testing",
+                "SparkTextLink",
+                "SparkTextLinkTesting",
                 .product(
                     name: "SparkCommonSnapshotTesting",
-                    package: "spm-poc-common"
+                    package: "spark-ios-common"
                 ),
-            ]
+            ],
+            path: "Tests/SnapshotTests"
         ),
     ]
 )
