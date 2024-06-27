@@ -11,7 +11,7 @@ import SwiftUI
 @testable import SparkTextLink
 @_spi(SI_SPI) @testable import SparkTextLinkTesting
 @_spi(SI_SPI) import SparkCommon
-import SparkThemingTesting
+@_spi(SI_SPI) import SparkThemingTesting
 
 final class TextLinkGetAttributedStringTests: XCTestCase {
 

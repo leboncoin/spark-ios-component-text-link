@@ -9,7 +9,7 @@
 import XCTest
 @testable import SparkTextLink
 @_spi(SI_SPI) @testable import SparkTextLinkTesting
-import SparkThemingTesting
+@_spi(SI_SPI) import SparkThemingTesting
 @_spi(SI_SPI) import SparkCommon
 import Combine
 

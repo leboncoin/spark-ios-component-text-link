@@ -10,7 +10,7 @@ import XCTest
 import SwiftUI
 @testable import SparkTextLink
 import SparkTheming
-import SparkThemingTesting
+@_spi(SI_SPI) import SparkThemingTesting
 
 final class TextLinkGetColorUseCaseTests: XCTestCase {
 

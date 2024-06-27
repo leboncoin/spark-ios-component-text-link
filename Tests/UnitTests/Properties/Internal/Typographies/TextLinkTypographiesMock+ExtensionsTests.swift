@@ -7,7 +7,7 @@
 //
 
 @testable import SparkTextLink
-import SparkThemingTesting
+@_spi(SI_SPI) import SparkThemingTesting
 
 extension TextLinkTypographies {
 
