@@ -9,7 +9,7 @@
 import XCTest
 import SwiftUI
 @testable import SparkTextLink
-import SparkThemingTesting
+@_spi(SI_SPI) import SparkThemingTesting
 
 final class TextLinkGetTypographiesUseCaseTests: XCTestCase {
 
