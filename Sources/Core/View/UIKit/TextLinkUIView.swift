@@ -92,7 +92,6 @@ public final class TextLinkUIView: UIControl {
         }
         set {
             self.viewModel.text = newValue
-            self.accessibilityLabelManager.internalValue = newValue
         }
     }
 
@@ -187,10 +186,10 @@ public final class TextLinkUIView: UIControl {
 
     public override var accessibilityLabel: String? {
         get {
-            return self.accessibilityLabelManager.value
+            return self.textLabel.accessibilityLabel
         }
         set {
-            self.accessibilityLabelManager.value = newValue
+            self.textLabel.accessibilityLabel = newValue
         }
     }
 
@@ -202,8 +201,6 @@ public final class TextLinkUIView: UIControl {
     private var imageViewHeightConstraint: NSLayoutConstraint?
 
     @ScaledUIMetric private var contentStackViewSpacing: CGFloat = 0
-
-    private var accessibilityLabelManager = AccessibilityLabelManager()
 
     private var subscriptions = Set<AnyCancellable>()
 
@@ -324,7 +321,6 @@ public final class TextLinkUIView: UIControl {
     // MARK: - Accessibility
     private func setupAccessibility() {
         self.isAccessibilityElement = true
-        self.accessibilityLabel = self.viewModel.text
         self.accessibilityTraits.insert(.link)
         if self.image != nil {
             self.accessibilityContainerType = .semanticGroup
