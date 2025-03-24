@@ -3,7 +3,7 @@
 //  SparkTextLink
 //
 //  Created by robin.lemaire on 07/12/2023.
-//  Copyright © 2023 Adevinta. All rights reserved.
+//  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import UIKit
@@ -326,6 +326,15 @@ public final class TextLinkUIView: UIControl {
             self.accessibilityContainerType = .semanticGroup
             self.accessibilityTraits.insert(.image)
         }
+    }
+
+    // MARK: - Instrinsic Content Size
+
+    public override var intrinsicContentSize: CGSize {
+        return .init(
+            width: self.frame.width,
+            height: CGFloat.maximum(self.imageContentStackView.frame.height, self.textLabel.frame.height)
+        )
     }
 
     // MARK: - Update UI

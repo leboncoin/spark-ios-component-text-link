@@ -3,13 +3,14 @@
 //  SparkTextLink
 //
 //  Created by robin.lemaire on 06/12/2023.
-//  Copyright © 2023 Adevinta. All rights reserved.
+//  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import SwiftUI
 @_spi(SI_SPI) import SparkCommon
 import SparkTheming
 
+/// The SwiftUI version for the text link.
 public struct TextLinkView: View {
 
     // MARK: - Component
