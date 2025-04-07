@@ -15,40 +15,27 @@ import SwiftUI
 
 final class TextLinkGetAttributedStringTests: XCTestCase {
 
-    // MARK: - Properties
-
-    private var mocks = Mocks()
-    private var useCase = TextLinkGetAttributedStringUseCase()
-
-    // MARK: - Setupt
-
-    override func setUp() {
-        super.setUp()
-
-        self.mocks = Mocks()
-        self.useCase = TextLinkGetAttributedStringUseCase(
-            getUnderlineUseCaseable: self.mocks.getUnderlineUseCaseMock
-        )
-    }
-
     // MARK: - UIKit Tests
 
     func test_execute_for_UIKit_without_range() {
         // GIVEN
+        let mock = Mock()
+        let useCase = mock.createUseCase()
+
         let expectedAttributedString = NSMutableAttributedString(
-            mocks: self.mocks,
+            mock: mock,
             isRange: false
         )
 
         // WHEN
-        let attributedString = self.useCase.execute(
+        let attributedString = useCase.execute(
             frameworkType: .uiKit,
-            text: self.mocks.textMock,
-            textColorToken: self.mocks.colorTokenMock,
+            text: mock.textMock,
+            textColorToken: mock.colorTokenMock,
             textHighlightRange: nil,
-            isHighlighted: self.mocks.isHighlightedMock,
-            variant: self.mocks.variantMock,
-            typographies: self.mocks.typographiesMock
+            isHighlighted: mock.isHighlightedMock,
+            variant: mock.variantMock,
+            typographies: mock.typographiesMock
         )
 
         // THEN
@@ -59,56 +46,64 @@ final class TextLinkGetAttributedStringTests: XCTestCase {
         )
 
         // Use Case
-        self.testUseCase(from: self.mocks)
+        self.testUseCase(from: mock)
     }
 
     func test_execute_for_UIKit_with_range() {
         // GIVEN
-        let expectedAttributedString = NSMutableAttributedString(
-            mocks: self.mocks,
-            isRange: true
-        )
+        for range in RangePosition.allCases {
+            let mock = Mock(rangePosition: range)
+            let useCase = mock.createUseCase()
 
-        // WHEN
-        let attributedString = self.useCase.execute(
-            frameworkType: .uiKit,
-            text: self.mocks.textMock,
-            textColorToken: self.mocks.colorTokenMock,
-            textHighlightRange: self.mocks.textHighlightRangeMock,
-            isHighlighted: self.mocks.isHighlightedMock,
-            variant: self.mocks.variantMock,
-            typographies: self.mocks.typographiesMock
-        )
+            let expectedAttributedString = NSMutableAttributedString(
+                mock: mock,
+                isRange: true
+            )
 
-        // THEN
-        XCTAssertEqual(
-            attributedString.leftValue,
-            expectedAttributedString,
-            "Wrong attributed string"
-        )
+            // WHEN
+            let attributedString = useCase.execute(
+                frameworkType: .uiKit,
+                text: mock.textMock,
+                textColorToken: mock.colorTokenMock,
+                textHighlightRange: mock.textHighlightRangeMock,
+                isHighlighted: mock.isHighlightedMock,
+                variant: mock.variantMock,
+                typographies: mock.typographiesMock
+            )
 
-        // Use Case
-        self.testUseCase(from: self.mocks)
+            // THEN
+            XCTAssertEqual(
+                attributedString.leftValue,
+                expectedAttributedString,
+                "Wrong attributed string for \(range.rawValue) range position"
+            )
+
+            // Use Case
+            self.testUseCase(from: mock)
+        }
     }
 
     // MARK: - SwiftUI Test
 
     func test_execute_for_SwiftUI_without_range() {
         // GIVEN
+        let mock = Mock()
+        let useCase = mock.createUseCase()
+
         let expectedAttributedString = AttributedString(
-            mocks: self.mocks,
+            mock: mock,
             isRange: false
         )
 
         // WHEN
-        let attributedString = self.useCase.execute(
+        let attributedString = useCase.execute(
             frameworkType: .swiftUI,
-            text: self.mocks.textMock,
-            textColorToken: self.mocks.colorTokenMock,
+            text: mock.textMock,
+            textColorToken: mock.colorTokenMock,
             textHighlightRange: nil,
-            isHighlighted: self.mocks.isHighlightedMock,
-            variant: self.mocks.variantMock,
-            typographies: self.mocks.typographiesMock
+            isHighlighted: mock.isHighlightedMock,
+            variant: mock.variantMock,
+            typographies: mock.typographiesMock
         )
 
         // THEN
@@ -119,43 +114,48 @@ final class TextLinkGetAttributedStringTests: XCTestCase {
         )
 
         // Use Case
-        self.testUseCase(from: self.mocks)
+        self.testUseCase(from: mock)
     }
 
     func test_execute_for_SwiftUI_with_range() throws {
         // GIVEN
-        var expectedAttributedString = AttributedString(
-            mocks: self.mocks,
-            isRange: true
-        )
+        for range in RangePosition.allCases {
+            let mock = Mock(rangePosition: range)
+            let useCase = mock.createUseCase()
 
-        let textHighlightRange = try XCTUnwrap(
-            Range(self.mocks.textHighlightRangeMock, in: expectedAttributedString),
-            "Range should not be nil"
-        )
-        expectedAttributedString[textHighlightRange].font = self.mocks.typographiesMock.highlight.font
-        expectedAttributedString[textHighlightRange].underlineStyle = self.mocks.underlineStyleMock
+            var expectedAttributedString = AttributedString(
+                mock: mock,
+                isRange: true
+            )
 
-        // WHEN
-        let attributedString = self.useCase.execute(
-            frameworkType: .swiftUI,
-            text: self.mocks.textMock,
-            textColorToken: self.mocks.colorTokenMock,
-            textHighlightRange: self.mocks.textHighlightRangeMock,
-            isHighlighted: self.mocks.isHighlightedMock,
-            variant: self.mocks.variantMock,
-            typographies: self.mocks.typographiesMock
-        )
+            let textHighlightRange = try XCTUnwrap(
+                Range(mock.textHighlightRangeMock, in: expectedAttributedString),
+                "Range should not be nil"
+            )
+            expectedAttributedString[textHighlightRange].font = mock.typographiesMock.highlight.font
+            expectedAttributedString[textHighlightRange].underlineStyle = mock.underlineStyleMock
 
-        // THEN
-        XCTAssertEqual(
-            attributedString.rightValue,
-            expectedAttributedString,
-            "Wrong attributed string"
-        )
+            // WHEN
+            let attributedString = useCase.execute(
+                frameworkType: .swiftUI,
+                text: mock.textMock,
+                textColorToken: mock.colorTokenMock,
+                textHighlightRange: mock.textHighlightRangeMock,
+                isHighlighted: mock.isHighlightedMock,
+                variant: mock.variantMock,
+                typographies: mock.typographiesMock
+            )
 
-        // Use Case
-        self.testUseCase(from: self.mocks)
+            // THEN
+            XCTAssertEqual(
+                attributedString.rightValue,
+                expectedAttributedString,
+                "Wrong attributed string for \(range.rawValue) range position"
+            )
+
+            // Use Case
+            self.testUseCase(from: mock)
+        }
     }
 }
 
@@ -163,23 +163,38 @@ final class TextLinkGetAttributedStringTests: XCTestCase {
 
 private extension TextLinkGetAttributedStringTests {
 
-    func testUseCase(from mocks: Mocks) {
+    func testUseCase(from mock: Mock) {
         TextLinkGetUnderlineUseCaseableMockTest.XCTAssert(
-            mocks.getUnderlineUseCaseMock,
+            mock.getUnderlineUseCaseMock,
             expectedNumberOfCalls: 1,
-            givenVariant: mocks.variantMock,
-            givenIsHighlighted: mocks.isHighlightedMock,
-            expectedReturnValue: mocks.underlineStyleMock
+            givenVariant: mock.variantMock,
+            givenIsHighlighted: mock.isHighlightedMock,
+            expectedReturnValue: mock.underlineStyleMock
         )
     }
 }
 
-// MARK: - Mocks
+// MARK: - Enum
 
-private final class Mocks {
+private enum RangePosition: String, CaseIterable {
+    case start
+    case end
+}
+
+// MARK: - Mock
+
+private final class Mock {
 
     let textMock = "My Text"
-    let textHighlightRangeMock = NSRange(location: 0, length: 2)
+    var rangePosition: RangePosition
+    lazy var textHighlightRangeMock: NSRange = {
+        switch self.rangePosition {
+        case .start:
+            NSRange(location: 0, length: 2)
+        case .end:
+            NSRange(location: 3, length: 4)
+        }
+    }()
     let variantMock: TextLinkVariant = .underline
     let typographiesMock: TextLinkTypographies = .mocked()
     let isHighlightedMock: Bool = true
@@ -187,44 +202,54 @@ private final class Mocks {
 
     let underlineStyleMock: NSUnderlineStyle = .double
 
+    init(rangePosition: RangePosition = .start) {
+        self.rangePosition = rangePosition
+    }
+
     lazy var getUnderlineUseCaseMock: TextLinkGetUnderlineUseCaseableGeneratedMock = {
         let mock = TextLinkGetUnderlineUseCaseableGeneratedMock()
         mock.executeWithVariantAndIsHighlightedReturnValue = self.underlineStyleMock
         return mock
     }()
+
+    func createUseCase() -> TextLinkGetAttributedStringUseCase {
+        TextLinkGetAttributedStringUseCase(
+            getUnderlineUseCaseable: self.getUnderlineUseCaseMock
+        )
+    }
 }
 
 // MARK: - Extension
 
 private extension NSMutableAttributedString {
 
-    convenience init(mocks: Mocks, isRange: Bool) {
+    convenience init(mock: Mock, isRange: Bool) {
         let highlightAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: mocks.colorTokenMock.uiColor,
-            .font: mocks.typographiesMock.highlight.uiFont,
-            .underlineStyle: mocks.underlineStyleMock.rawValue,
-            .underlineColor: mocks.colorTokenMock.uiColor,
+            .foregroundColor: mock.colorTokenMock.uiColor,
+            .font: mock.typographiesMock.highlight.uiFont,
+            .underlineStyle: mock.underlineStyleMock.rawValue,
+            .underlineColor: mock.colorTokenMock.uiColor,
         ]
 
         let attributes: [NSAttributedString.Key: Any]
         if isRange {
             attributes = [
-                .foregroundColor: mocks.colorTokenMock.uiColor,
-                .font: mocks.typographiesMock.normal.uiFont
+                .foregroundColor: mock.colorTokenMock.uiColor,
+                .font: mock.typographiesMock.normal.uiFont
             ]
         } else {
             attributes = highlightAttributes
         }
 
         self.init(
-            string: mocks.textMock,
+            string: mock.textMock,
             attributes: attributes
         )
 
         if isRange {
             self.addAttributes(
                 highlightAttributes,
-                range: mocks.textHighlightRangeMock
+                range: mock.textHighlightRangeMock
             )
         }
     }
@@ -232,16 +257,16 @@ private extension NSMutableAttributedString {
 
 private extension AttributedString {
 
-    init(mocks: Mocks, isRange: Bool) {
-        self.init(mocks.textMock)
+    init(mock: Mock, isRange: Bool) {
+        self.init(mock.textMock)
 
         if isRange {
-            self.foregroundColor = mocks.colorTokenMock.color
-            self.font = mocks.typographiesMock.normal.font
+            self.foregroundColor = mock.colorTokenMock.color
+            self.font = mock.typographiesMock.normal.font
         } else {
-            self.foregroundColor = mocks.colorTokenMock.color
-            self.font = mocks.typographiesMock.highlight.font
-            self.underlineStyle = mocks.underlineStyleMock
+            self.foregroundColor = mock.colorTokenMock.color
+            self.font = mock.typographiesMock.highlight.font
+            self.underlineStyle = mock.underlineStyleMock
         }
     }
 }
