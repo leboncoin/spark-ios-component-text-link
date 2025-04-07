@@ -100,7 +100,7 @@ struct TextLinkGetAttributedStringUseCase: TextLinkGetAttributedStringUseCaseabl
             highlightAttributes[.underlineColor] = textColorToken.uiColor
         }
 
-        if let textHighlightRange, text.count > textHighlightRange.upperBound {
+        if let textHighlightRange, text.count >= textHighlightRange.upperBound {
             let normalAttributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: textColorToken.uiColor,
                 .font: typographies.normal.uiFont
