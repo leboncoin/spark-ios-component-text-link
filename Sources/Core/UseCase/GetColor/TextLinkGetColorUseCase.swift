@@ -29,6 +29,8 @@ struct TextLinkGetColorUseCase: TextLinkGetColorUseCaseable {
         switch intent {
         case .accent:
             return isHighlighted ? colors.states.accentPressed : colors.accent.accent
+        case .onAccentContainer:
+            return colors.accent.onAccentContainer
         case .alert:
             return isHighlighted ? colors.states.alertPressed : colors.feedback.alert
         case .basic:

@@ -48,68 +48,57 @@ final class TextLinkGetTypographiesUseCaseTests: XCTestCase {
 private extension TextLinkTypography {
 
     func expectedTypographies(from typographyMock: TypographyGeneratedMock) -> TextLinkTypographies {
-        switch self {
-        case .display1:
-            return .init(
-                normal: typographyMock.display1,
-                highlight: typographyMock.display1
-            )
-        case .display2:
-            return .init(
-                normal: typographyMock.display2,
-                highlight: typographyMock.display2
-            )
-        case .display3:
-            return .init(
-                normal: typographyMock.display3,
-                highlight: typographyMock.display3
-            )
+        return switch self {
+        case .display1: .init(
+            normal: typographyMock.display1,
+            highlight: typographyMock.display1
+        )
+        case .display2: .init(
+            normal: typographyMock.display2,
+            highlight: typographyMock.display2
+        )
+        case .display3: .init(
+            normal: typographyMock.display3,
+            highlight: typographyMock.display3
+        )
 
-        case .headline1:
-            return .init(
-                normal: typographyMock.headline1,
-                highlight: typographyMock.headline1
-            )
-        case .headline2:
-            return .init(
-                normal: typographyMock.headline2,
-                highlight: typographyMock.headline2
-            )
+        case .headline1: .init(
+            normal: typographyMock.headline1,
+            highlight: typographyMock.headline1
+        )
+        case .headline2: .init(
+            normal: typographyMock.headline2,
+            highlight: typographyMock.headline2
+        )
 
-        case .subhead:
-            return .init(
-                normal: typographyMock.subhead,
-                highlight: typographyMock.subhead
-            )
+        case .subhead: .init(
+            normal: typographyMock.subhead,
+            highlight: typographyMock.subhead
+        )
 
-        case .body1:
-            return .init(
-                normal: typographyMock.body1,
-                highlight: typographyMock.body1Highlight
-            )
-        case .body2:
-            return .init(
-                normal: typographyMock.body2,
-                highlight: typographyMock.body2Highlight
-            )
+        case .body1: .init(
+            normal: typographyMock.body1,
+            highlight: typographyMock.body1Highlight
+        )
+        case .body2: .init(
+            normal: typographyMock.body2,
+            highlight: typographyMock.body2Highlight
+        )
 
-        case .caption:
-            return .init(
-                normal: typographyMock.caption,
-                highlight: typographyMock.captionHighlight
-            )
+        case .caption: .init(
+            normal: typographyMock.caption,
+            highlight: typographyMock.captionHighlight
+        )
 
-        case .small:
-            return .init(
-                normal: typographyMock.small,
-                highlight: typographyMock.smallHighlight
-            )
+        case .small: .init(
+            normal: typographyMock.small,
+            highlight: typographyMock.smallHighlight
+        )
 
-        case .callout:
-            return .init(
-                normal: typographyMock.callout,
-                highlight: typographyMock.callout
-            )
+        case .callout: .init(
+            normal: typographyMock.callout,
+            highlight: typographyMock.callout
+        )
         }
     }
 }

@@ -32,6 +32,7 @@ final class TextLinkGetAttributedStringTests: XCTestCase {
             frameworkType: .uiKit,
             text: mock.textMock,
             textColorToken: mock.colorTokenMock,
+            textDim: mock.dimMock,
             textHighlightRange: nil,
             isHighlighted: mock.isHighlightedMock,
             variant: mock.variantMock,
@@ -65,6 +66,7 @@ final class TextLinkGetAttributedStringTests: XCTestCase {
                 frameworkType: .uiKit,
                 text: mock.textMock,
                 textColorToken: mock.colorTokenMock,
+                textDim: mock.dimMock,
                 textHighlightRange: mock.textHighlightRangeMock,
                 isHighlighted: mock.isHighlightedMock,
                 variant: mock.variantMock,
@@ -100,6 +102,7 @@ final class TextLinkGetAttributedStringTests: XCTestCase {
             frameworkType: .swiftUI,
             text: mock.textMock,
             textColorToken: mock.colorTokenMock,
+            textDim: mock.dimMock,
             textHighlightRange: nil,
             isHighlighted: mock.isHighlightedMock,
             variant: mock.variantMock,
@@ -140,6 +143,7 @@ final class TextLinkGetAttributedStringTests: XCTestCase {
                 frameworkType: .swiftUI,
                 text: mock.textMock,
                 textColorToken: mock.colorTokenMock,
+                textDim: mock.dimMock,
                 textHighlightRange: mock.textHighlightRangeMock,
                 isHighlighted: mock.isHighlightedMock,
                 variant: mock.variantMock,
@@ -199,6 +203,7 @@ private final class Mock {
     let typographiesMock: TextLinkTypographies = .mocked()
     let isHighlightedMock: Bool = true
     let colorTokenMock = ColorTokenGeneratedMock()
+    let dimMock: CGFloat = 0.5
 
     let underlineStyleMock: NSUnderlineStyle = .double
 
@@ -214,7 +219,7 @@ private final class Mock {
 
     func createUseCase() -> TextLinkGetAttributedStringUseCase {
         TextLinkGetAttributedStringUseCase(
-            getUnderlineUseCaseable: self.getUnderlineUseCaseMock
+            getUnderlineUseCase: self.getUnderlineUseCaseMock
         )
     }
 }
@@ -224,17 +229,18 @@ private final class Mock {
 private extension NSMutableAttributedString {
 
     convenience init(mock: Mock, isRange: Bool) {
+        let textColor = mock.colorTokenMock.uiColor.withAlphaComponent(mock.dimMock)
         let highlightAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: mock.colorTokenMock.uiColor,
+            .foregroundColor: textColor,
             .font: mock.typographiesMock.highlight.uiFont,
             .underlineStyle: mock.underlineStyleMock.rawValue,
-            .underlineColor: mock.colorTokenMock.uiColor,
+            .underlineColor: textColor,
         ]
 
         let attributes: [NSAttributedString.Key: Any]
         if isRange {
             attributes = [
-                .foregroundColor: mock.colorTokenMock.uiColor,
+                .foregroundColor: textColor,
                 .font: mock.typographiesMock.normal.uiFont
             ]
         } else {
@@ -260,11 +266,13 @@ private extension AttributedString {
     init(mock: Mock, isRange: Bool) {
         self.init(mock.textMock)
 
+        let foregroundColor = mock.colorTokenMock.color.opacity(mock.dimMock)
+
         if isRange {
-            self.foregroundColor = mock.colorTokenMock.color
+            self.foregroundColor = foregroundColor
             self.font = mock.typographiesMock.normal.font
         } else {
-            self.foregroundColor = mock.colorTokenMock.color
+            self.foregroundColor = foregroundColor
             self.font = mock.typographiesMock.highlight.font
             self.underlineStyle = mock.underlineStyleMock
         }
