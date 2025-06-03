@@ -89,6 +89,7 @@ class TextLinkViewModel: ObservableObject {
     // MARK: - UseCases
 
     let getColorUseCase: TextLinkGetColorUseCaseable
+    let getDimUseCase: TextLinkGetDimUseCaseable
     let getTypographiesUseCase: TextLinkGetTypographiesUseCaseable
     let getAttributedStringUseCase: TextLinkGetAttributedStringUseCaseable
     let getImageSizeUseCase: TextLinkGetImageSizeUseCaseable
@@ -105,6 +106,7 @@ class TextLinkViewModel: ObservableObject {
         variant: TextLinkVariant,
         alignment: TextLinkAlignment,
         getColorUseCase: TextLinkGetColorUseCaseable = TextLinkGetColorUseCase(),
+        getDimUseCase: TextLinkGetDimUseCaseable = TextLinkGetDimUseCase(),
         getTypographiesUseCase: TextLinkGetTypographiesUseCaseable = TextLinkGetTypographiesUseCase(),
         getAttributedStringUseCase: TextLinkGetAttributedStringUseCaseable = TextLinkGetAttributedStringUseCase(),
         getImageSizeUseCase: TextLinkGetImageSizeUseCaseable = TextLinkGetImageSizeUseCase()
@@ -120,6 +122,7 @@ class TextLinkViewModel: ObservableObject {
         self.alignment = alignment
 
         self.getColorUseCase = getColorUseCase
+        self.getDimUseCase = getDimUseCase
         self.getTypographiesUseCase = getTypographiesUseCase
         self.getAttributedStringUseCase = getAttributedStringUseCase
         self.getImageSizeUseCase = getImageSizeUseCase
@@ -167,6 +170,12 @@ class TextLinkViewModel: ObservableObject {
             colors: self.theme.colors
         )
 
+        let dim = self.getDimUseCase.execute(
+            intent: self.intent,
+            isHighlighted: self.isHighlighted,
+            dims: self.theme.dims
+        )
+
         self.spacing = self.theme.layout.spacing.medium
 
         self.imageTintColor = color
@@ -175,6 +184,7 @@ class TextLinkViewModel: ObservableObject {
             frameworkType: self.frameworkType,
             text: self.text,
             textColorToken: color,
+            textDim: dim,
             textHighlightRange: self.textHighlightRange,
             isHighlighted: self.isHighlighted,
             variant: self.variant,

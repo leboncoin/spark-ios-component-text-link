@@ -200,6 +200,7 @@ final class TextLinkViewModelTests: XCTestCase {
             givenFrameworkType: givenFrameworkType,
             givenText: textMock,
             givenTextColorToken: stub.colorMock,
+            givenTextDim: stub.dimMock,
             givenTextHighlightRange: textHighlightRangeMock,
             givenIsHighlighted: false,
             givenVariant: variantMock,
@@ -269,7 +270,7 @@ final class TextLinkViewModelTests: XCTestCase {
         )
         TextLinkGetAttributedStringUseCaseableMockTest.XCTCallsCount(
             stub.getAttributedStringUseCaseMock,
-            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 1
+            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextDimAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 1
         )
         TextLinkGetImageSizeUseCaseableMockTest.XCTCallsCount(
             stub.getImageSizeUseCaseMock,
@@ -617,7 +618,7 @@ final class TextLinkViewModelTests: XCTestCase {
         )
         TextLinkGetAttributedStringUseCaseableMockTest.XCTCallsCount(
             stub.getAttributedStringUseCaseMock,
-            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 0
+            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextDimAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 0
         )
         TextLinkGetImageSizeUseCaseableMockTest.XCTCallsCount(
             stub.getImageSizeUseCaseMock,
@@ -661,7 +662,7 @@ final class TextLinkViewModelTests: XCTestCase {
         )
         TextLinkGetAttributedStringUseCaseableMockTest.XCTCallsCount(
             stub.getAttributedStringUseCaseMock,
-            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: givenIsContentDidUpdate ? 1 : 0
+            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextDimAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: givenIsContentDidUpdate ? 1 : 0
         )
         TextLinkGetImageSizeUseCaseableMockTest.XCTCallsCount(
             stub.getImageSizeUseCaseMock,
@@ -717,7 +718,7 @@ final class TextLinkViewModelTests: XCTestCase {
         )
         TextLinkGetAttributedStringUseCaseableMockTest.XCTCallsCount(
             stub.getAttributedStringUseCaseMock,
-            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 0
+            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextDimAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 0
         )
         TextLinkGetImageSizeUseCaseableMockTest.XCTCallsCount(
             stub.getImageSizeUseCaseMock,
@@ -737,6 +738,7 @@ private final class Stub: TextLinkViewModelStub {
     let themeMock = ThemeGeneratedMock.mocked()
 
     let colorMock = ColorTokenGeneratedMock.random()
+    let dimMock = 0.8
 
     let typographiesMock = TextLinkTypographies.mocked()
     let attributedStringMock: AttributedStringEither = .left(.init(string: "AS"))
@@ -767,11 +769,14 @@ private final class Stub: TextLinkViewModelStub {
         let getColorUseCaseMock = TextLinkGetColorUseCaseableGeneratedMock()
         getColorUseCaseMock.executeWithIntentAndIsHighlightedAndColorsReturnValue = self.colorMock
 
+        let getDimUseCaseMock = TextLinkGetDimUseCaseableGeneratedMock()
+        getDimUseCaseMock.executeWithIntentAndIsHighlightedAndDimsReturnValue = self.dimMock
+
         let getTypographiesUseCaseMock = TextLinkGetTypographiesUseCaseableGeneratedMock()
         getTypographiesUseCaseMock.executeWithTextLinkTypographyAndTypographyReturnValue = self.typographiesMock
 
         let getAttributedStringUseCaseMock = TextLinkGetAttributedStringUseCaseableGeneratedMock()
-        getAttributedStringUseCaseMock.executeWithFrameworkTypeAndTextAndTextColorTokenAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesReturnValue = self.attributedStringMock
+        getAttributedStringUseCaseMock.executeWithFrameworkTypeAndTextAndTextColorTokenAndTextDimAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesReturnValue = self.attributedStringMock
 
         let getImageSizeUseCaseMock = TextLinkGetImageSizeUseCaseableGeneratedMock()
         getImageSizeUseCaseMock.executeWithTypographiesReturnValue = self.imageSizeMock
@@ -788,6 +793,7 @@ private final class Stub: TextLinkViewModelStub {
             variant: variant,
             alignment: alignment,
             getColorUseCase: getColorUseCaseMock,
+            getDimUseCase: getDimUseCaseMock,
             getTypographiesUseCase: getTypographiesUseCaseMock,
             getAttributedStringUseCase: getAttributedStringUseCaseMock,
             getImageSizeUseCase: getImageSizeUseCaseMock
@@ -796,6 +802,7 @@ private final class Stub: TextLinkViewModelStub {
         super.init(
             viewModel: viewModel,
             getColorUseCaseMock: getColorUseCaseMock,
+            getDimUseCaseMock: getDimUseCaseMock,
             getTypographiesUseCaseMock: getTypographiesUseCaseMock,
             getAttributedStringUseCaseMock: getAttributedStringUseCaseMock,
             getImageSizeUseCaseMock: getImageSizeUseCaseMock

@@ -81,6 +81,8 @@ private extension TextLinkIntent {
         switch self {
         case .accent:
             return colorsMock.states.accentPressed
+        case .onAccentContainer:
+            return colorsMock.accent.onAccentContainer
         case .alert:
             return colorsMock.states.alertPressed
         case .basic:
@@ -106,6 +108,8 @@ private extension TextLinkIntent {
         switch self {
         case .accent:
             return colorsMock.accent.accent
+        case .onAccentContainer:
+            return colorsMock.accent.onAccentContainer
         case .alert:
             return colorsMock.feedback.alert
         case .basic:

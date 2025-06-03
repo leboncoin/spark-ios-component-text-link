@@ -18,6 +18,7 @@ protocol TextLinkGetAttributedStringUseCaseable {
     func execute(frameworkType: FrameworkType,
                  text: String,
                  textColorToken: any ColorToken,
+                 textDim: CGFloat,
                  textHighlightRange: NSRange?,
                  isHighlighted: Bool,
                  variant: TextLinkVariant,
@@ -28,12 +29,12 @@ struct TextLinkGetAttributedStringUseCase: TextLinkGetAttributedStringUseCaseabl
 
     // MARK: - Properties
 
-    private let getUnderlineUseCaseable: TextLinkGetUnderlineUseCaseable
+    private let getUnderlineUseCase: TextLinkGetUnderlineUseCaseable
 
     // MARK: - Initialization
 
-    init(getUnderlineUseCaseable: TextLinkGetUnderlineUseCaseable = TextLinkGetUnderlineUseCase()) {
-        self.getUnderlineUseCaseable = getUnderlineUseCaseable
+    init(getUnderlineUseCase: TextLinkGetUnderlineUseCaseable = TextLinkGetUnderlineUseCase()) {
+        self.getUnderlineUseCase = getUnderlineUseCase
     }
 
     // MARK: - Methods
@@ -42,12 +43,13 @@ struct TextLinkGetAttributedStringUseCase: TextLinkGetAttributedStringUseCaseabl
         frameworkType: FrameworkType,
         text: String,
         textColorToken: any ColorToken,
+        textDim: CGFloat,
         textHighlightRange: NSRange?,
         isHighlighted: Bool,
         variant: TextLinkVariant,
         typographies: TextLinkTypographies
     ) -> AttributedStringEither {
-        let underlineStyle = self.getUnderlineUseCaseable.execute(
+        let underlineStyle = self.getUnderlineUseCase.execute(
             variant: variant,
             isHighlighted: isHighlighted
         )
@@ -60,6 +62,7 @@ struct TextLinkGetAttributedStringUseCase: TextLinkGetAttributedStringUseCaseabl
             let attributedString = self.makeNSAttributedString(
                 text: text,
                 textColorToken: textColorToken,
+                textDim: textDim,
                 textHighlightRange: textHighlightRange,
                 underlineStyle: underlineStyle,
                 typographies: typographies
@@ -70,6 +73,7 @@ struct TextLinkGetAttributedStringUseCase: TextLinkGetAttributedStringUseCaseabl
             let attributedString = self.makerAttributedString(
                 text: text,
                 textColorToken: textColorToken,
+                textDim: textDim,
                 textHighlightRange: textHighlightRange,
                 underlineStyle: underlineStyle,
                 typographies: typographies
@@ -84,25 +88,27 @@ struct TextLinkGetAttributedStringUseCase: TextLinkGetAttributedStringUseCaseabl
     private func makeNSAttributedString(
         text: String,
         textColorToken: any ColorToken,
+        textDim: CGFloat,
         textHighlightRange: NSRange?,
         underlineStyle: NSUnderlineStyle?,
         typographies: TextLinkTypographies
     ) -> NSAttributedString {
         var attributedString: NSMutableAttributedString
+        let textColor = textColorToken.uiColor.withAlphaComponent(textDim)
 
         var highlightAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: textColorToken.uiColor,
+            .foregroundColor: textColor,
             .font: typographies.highlight.uiFont
         ]
 
         if let underlineStyle {
             highlightAttributes[.underlineStyle] = underlineStyle.rawValue
-            highlightAttributes[.underlineColor] = textColorToken.uiColor
+            highlightAttributes[.underlineColor] = textColor
         }
 
         if let textHighlightRange, text.count >= textHighlightRange.upperBound {
             let normalAttributes: [NSAttributedString.Key: Any] = [
-                .foregroundColor: textColorToken.uiColor,
+                .foregroundColor: textColor,
                 .font: typographies.normal.uiFont
             ]
 
@@ -129,12 +135,13 @@ struct TextLinkGetAttributedStringUseCase: TextLinkGetAttributedStringUseCaseabl
     private func makerAttributedString(
         text: String,
         textColorToken: any ColorToken,
+        textDim: CGFloat,
         textHighlightRange: NSRange?,
         underlineStyle: NSUnderlineStyle?,
         typographies: TextLinkTypographies
     ) -> AttributedString {
         var attributedString = AttributedString(text)
-        attributedString.foregroundColor = textColorToken.color
+        attributedString.foregroundColor = textColorToken.color.opacity(textDim)
 
         if let textHighlightRangeTemp = textHighlightRange,
            let textHighlightRange = Range(textHighlightRangeTemp, in: attributedString) {

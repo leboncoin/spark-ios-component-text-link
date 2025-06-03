@@ -9,6 +9,7 @@
 /// The intent of the text link.
 public enum TextLinkIntent: CaseIterable {
     case accent
+    case onAccentContainer
     case alert
     case basic
     case danger
