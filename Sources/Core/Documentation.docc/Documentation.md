@@ -1,4 +1,4 @@
-# ``SparkTextLink``
+# ``SparkComponentTextLink``
 
 The Spark Textlink is a reference to a resource.
 

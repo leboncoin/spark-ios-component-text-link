@@ -5,18 +5,18 @@ import PackageDescription
 
 // swiftlint:disable all
 let package = Package(
-    name: "SparkTextLink",
+    name: "SparkComponentTextLink",
     platforms: [
         .iOS(.v16)
     ],
     products: [
         .library(
-            name: "SparkTextLink",
-            targets: ["SparkTextLink"]
+            name: "SparkComponentTextLink",
+            targets: ["SparkComponentTextLink"]
         ),
         .library(
-            name: "SparkTextLinkTesting",
-            targets: ["SparkTextLinkTesting"]
+            name: "SparkComponentTextLinkTesting",
+            targets: ["SparkComponentTextLinkTesting"]
         )
     ],
     dependencies: [
@@ -33,7 +33,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "SparkTextLink",
+            name: "SparkComponentTextLink",
             dependencies: [
                 .product(
                     name: "SparkCommon",
@@ -47,9 +47,9 @@ let package = Package(
             path: "Sources/Core"
         ),
         .target(
-            name: "SparkTextLinkTesting",
+            name: "SparkComponentTextLinkTesting",
             dependencies: [
-                "SparkTextLink",
+                "SparkComponentTextLink",
                 .product(
                     name: "SparkCommon",
                     package: "spark-ios-common"
@@ -70,10 +70,10 @@ let package = Package(
             path: "Sources/Testing"
         ),
         .testTarget(
-            name: "SparkTextLinkUnitTests",
+            name: "SparkComponentTextLinkUnitTests",
             dependencies: [
-                "SparkTextLink",
-                "SparkTextLinkTesting",
+                "SparkComponentTextLink",
+                "SparkComponentTextLinkTesting",
                 .product(
                     name: "SparkCommonTesting",
                     package: "spark-ios-common"
@@ -86,10 +86,10 @@ let package = Package(
             path: "Tests/UnitTests"
         ),
         .testTarget(
-            name: "SparkTextLinkSnapshotTests",
+            name: "SparkComponentTextLinkSnapshotTests",
             dependencies: [
-                "SparkTextLink",
-                "SparkTextLinkTesting",
+                "SparkComponentTextLink",
+                "SparkComponentTextLinkTesting",
                 .product(
                     name: "SparkCommonSnapshotTesting",
                     package: "spark-ios-common"

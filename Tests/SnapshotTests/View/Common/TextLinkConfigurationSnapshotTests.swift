@@ -1,13 +1,13 @@
 //
 //  TextLinkConfigurationSnapshotTests.swift
-//  SparkTextLink
+//  SparkComponentTextLink
 //
 //  Created by robin.lemaire on 19/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import XCTest
-@testable import SparkTextLink
+@testable import SparkComponentTextLink
 @_spi(SI_SPI) import SparkCommon
 @_spi(SI_SPI) import SparkCommonSnapshotTesting
 

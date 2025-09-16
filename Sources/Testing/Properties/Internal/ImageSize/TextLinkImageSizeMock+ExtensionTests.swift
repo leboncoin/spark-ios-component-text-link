@@ -1,12 +1,12 @@
 //
 //  TextLinkImageSizeMock+ExtensionTests.swift
-//  SparkTextLink
+//  SparkComponentTextLink
 //
 //  Created by robin.lemaire on 18/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
-@testable import SparkTextLink
+@testable import SparkComponentTextLink
 import Foundation
 
 extension TextLinkImageSize {

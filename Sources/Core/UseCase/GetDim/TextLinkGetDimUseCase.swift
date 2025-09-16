@@ -1,6 +1,6 @@
 //
 //  TextLinkGetDimUseCase.swift
-//  SparkTextLink
+//  SparkComponentTextLink
 //
 //  Created by robin.lemaire on 03/06/2025.
 //  Copyright © 2023 Leboncoin. All rights reserved.
@@ -15,7 +15,7 @@ protocol TextLinkGetDimUseCaseable {
     // sourcery: dims = "Identical"
     func execute(intent: TextLinkIntent,
                  isHighlighted: Bool,
-                 dims: Dims) -> CGFloat
+                 dims: any Dims) -> CGFloat
 }
 
 struct TextLinkGetDimUseCase: TextLinkGetDimUseCaseable {
@@ -25,7 +25,7 @@ struct TextLinkGetDimUseCase: TextLinkGetDimUseCaseable {
     func execute(
         intent: TextLinkIntent,
         isHighlighted: Bool,
-        dims: Dims
+        dims: any Dims
     ) -> CGFloat {
         switch intent {
         case .onAccentContainer, .onSurface:

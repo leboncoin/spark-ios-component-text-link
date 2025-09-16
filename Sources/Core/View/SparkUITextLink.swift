@@ -1,6 +1,6 @@
 //
 //  TextLinkUIView.swift
-//  SparkTextLink
+//  SparkComponentTextLink
 //
 //  Created by robin.lemaire on 07/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
@@ -76,7 +76,7 @@ public final class TextLinkUIView: UIControl {
     // MARK: - Public Properties
 
     /// The spark theme of the text link.
-    public var theme: Theme {
+    public var theme: any Theme {
         get {
             return self.viewModel.theme
         }

@@ -1,6 +1,6 @@
 //
 //  TextLinkAlignment.swift
-//  SparkTextLink
+//  SparkComponentTextLink
 //
 //  Created by robin.lemaire on 08/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.

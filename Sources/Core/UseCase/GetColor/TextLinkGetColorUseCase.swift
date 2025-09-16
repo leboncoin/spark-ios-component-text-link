@@ -1,6 +1,6 @@
 //
 //  TextLinkGetColorUseCase.swift
-//  SparkTextLink
+//  SparkComponentTextLink
 //
 //  Created by robin.lemaire on 05/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
@@ -14,7 +14,7 @@ protocol TextLinkGetColorUseCaseable {
     // sourcery: colors = "Identical", return = "Identical"
     func execute(intent: TextLinkIntent,
                  isHighlighted: Bool,
-                 colors: Colors) -> any ColorToken
+                 colors: any Colors) -> any ColorToken
 }
 
 struct TextLinkGetColorUseCase: TextLinkGetColorUseCaseable {
@@ -24,7 +24,7 @@ struct TextLinkGetColorUseCase: TextLinkGetColorUseCaseable {
     func execute(
         intent: TextLinkIntent,
         isHighlighted: Bool,
-        colors: Colors
+        colors: any Colors
     ) -> any ColorToken {
         switch intent {
         case .accent:

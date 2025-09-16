@@ -1,12 +1,12 @@
 //
 //  TextLinkScenarioSnapshotTests.swift
-//  SparkTextLink
+//  SparkComponentTextLink
 //
 //  Created by robin.lemaire on 19/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
-@testable import SparkTextLink
+@testable import SparkComponentTextLink
 import UIKit
 import SwiftUI
 @_spi(SI_SPI) import SparkCommon
