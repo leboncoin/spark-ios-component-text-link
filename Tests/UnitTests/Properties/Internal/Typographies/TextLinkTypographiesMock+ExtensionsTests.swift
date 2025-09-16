@@ -1,12 +1,12 @@
 //
 //  TextLinkTypographiesMock+ExtensionTests.swift
-//  SparkTextLinkUnitTests
+//  SparkComponentTextLinkUnitTests
 //
 //  Created by robin.lemaire on 14/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
-@testable import SparkTextLink
+@testable import SparkComponentTextLink
 @_spi(SI_SPI) import SparkThemingTesting
 
 extension TextLinkTypographies {

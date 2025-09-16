@@ -1,6 +1,6 @@
 //
 //  TextLinkViewSnapshotTests.swift
-//  SparkTextLinkSnapshotTests
+//  SparkComponentTextLinkSnapshotTests
 //
 //  Created by robin.lemaire on 19/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 import SnapshotTesting
-@testable import SparkTextLink
+@testable import SparkComponentTextLink
 import SparkTheming
 import SparkTheme
 @_spi(SI_SPI) import SparkCommon
@@ -19,7 +19,7 @@ final class TextLinkViewSnapshotTests: SwiftUIComponentSnapshotTestCase {
 
     // MARK: - Properties
 
-    private let theme: Theme = SparkTheme.shared
+    private let theme: any Theme = SparkTheme.shared
 
     // MARK: - Tests
 

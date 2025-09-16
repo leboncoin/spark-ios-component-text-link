@@ -1,6 +1,6 @@
 //
 //  TextLinkGetDimUseCaseTests.swift
-//  SparkTextLinkUnitTests
+//  SparkComponentTextLinkUnitTests
 //
 //  Created by robin.lemaire on 03/06/2025.
 //  Copyright © 2023 Leboncoin. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 import SwiftUI
-@testable import SparkTextLink
+@testable import SparkComponentTextLink
 import SparkTheming
 @_spi(SI_SPI) import SparkThemingTesting
 

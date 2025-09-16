@@ -1,14 +1,14 @@
 //
 //  TextLinkCommonViewModelTests.swift
-//  SparkTextLinkUnitTests
+//  SparkComponentTextLinkUnitTests
 //
 //  Created by robin.lemaire on 08/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import XCTest
-@testable import SparkTextLink
-@_spi(SI_SPI) @testable import SparkTextLinkTesting
+@testable import SparkComponentTextLink
+@_spi(SI_SPI) @testable import SparkComponentTextLinkTesting
 @_spi(SI_SPI) import SparkThemingTesting
 @_spi(SI_SPI) import SparkCommon
 import Combine

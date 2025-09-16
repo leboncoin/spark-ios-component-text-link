@@ -1,13 +1,13 @@
 //
 //  TextLinkAlignmentTests.swift
-//  SparkTextLinkUnitTests
+//  SparkComponentTextLinkUnitTests
 //
 //  Created by robin.lemaire on 08/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import XCTest
-@testable import SparkTextLink
+@testable import SparkComponentTextLink
 
 final class TextLinkAlignmentTests: XCTestCase {
 

@@ -1,6 +1,6 @@
 //
 //  TextLinkGetTypographiesUseCaseTests.swift
-//  SparkTextLinkUnitTests
+//  SparkComponentTextLinkUnitTests
 //
 //  Created by robin.lemaire on 06/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 import SwiftUI
-@testable import SparkTextLink
+@testable import SparkComponentTextLink
 @_spi(SI_SPI) import SparkThemingTesting
 
 final class TextLinkGetTypographiesUseCaseTests: XCTestCase {
