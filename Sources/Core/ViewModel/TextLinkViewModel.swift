@@ -79,6 +79,8 @@ class TextLinkViewModel: ObservableObject {
     @Published private(set) var imageSize: TextLinkImageSize?
     @Published private(set) var imageTintColor: any ColorToken = ColorTokenDefault.clear
     @Published private(set) var isTrailingImage: Bool = false
+    @Published private(set) var dim: CGFloat = .zero
+    @Published private(set) var hoverStyle = TextLinkHoverStyle()
 
     // MARK: - Private Properties
 
@@ -90,6 +92,7 @@ class TextLinkViewModel: ObservableObject {
 
     let getColorUseCase: TextLinkGetColorUseCaseable
     let getDimUseCase: TextLinkGetDimUseCaseable
+    let getHoverStyleUseCase: TextLinkGetHoverStyleUseCaseable
     let getTypographiesUseCase: TextLinkGetTypographiesUseCaseable
     let getAttributedStringUseCase: TextLinkGetAttributedStringUseCaseable
     let getImageSizeUseCase: TextLinkGetImageSizeUseCaseable
@@ -107,6 +110,7 @@ class TextLinkViewModel: ObservableObject {
         alignment: TextLinkAlignment,
         getColorUseCase: TextLinkGetColorUseCaseable = TextLinkGetColorUseCase(),
         getDimUseCase: TextLinkGetDimUseCaseable = TextLinkGetDimUseCase(),
+        getHoverStyleUseCase: TextLinkGetHoverStyleUseCaseable = TextLinkGetHoverStyleUseCase(),
         getTypographiesUseCase: TextLinkGetTypographiesUseCaseable = TextLinkGetTypographiesUseCase(),
         getAttributedStringUseCase: TextLinkGetAttributedStringUseCaseable = TextLinkGetAttributedStringUseCase(),
         getImageSizeUseCase: TextLinkGetImageSizeUseCaseable = TextLinkGetImageSizeUseCase()
@@ -123,6 +127,7 @@ class TextLinkViewModel: ObservableObject {
 
         self.getColorUseCase = getColorUseCase
         self.getDimUseCase = getDimUseCase
+        self.getHoverStyleUseCase = getHoverStyleUseCase
         self.getTypographiesUseCase = getTypographiesUseCase
         self.getAttributedStringUseCase = getAttributedStringUseCase
         self.getImageSizeUseCase = getImageSizeUseCase
@@ -170,7 +175,7 @@ class TextLinkViewModel: ObservableObject {
             colors: self.theme.colors
         )
 
-        let dim = self.getDimUseCase.execute(
+        self.dim = self.getDimUseCase.execute(
             intent: self.intent,
             isHighlighted: self.isHighlighted,
             dims: self.theme.dims
@@ -184,11 +189,15 @@ class TextLinkViewModel: ObservableObject {
             frameworkType: self.frameworkType,
             text: self.text,
             textColorToken: color,
-            textDim: dim,
             textHighlightRange: self.textHighlightRange,
             isHighlighted: self.isHighlighted,
             variant: self.variant,
             typographies: self.getTypographies(forceToReload: true)
+        )
+
+        self.hoverStyle = self.getHoverStyleUseCase.execute(
+            theme: self.theme,
+            intent: self.intent
         )
     }
 

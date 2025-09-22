@@ -183,6 +183,17 @@ final class TextLinkViewModelTests: XCTestCase {
             expectedNumberOfSinks: expectedNumberOfSinks,
             expectedValue: expectedIsSinksValues ? stub.isTrailingImageMock : false
         )
+
+        TextLinkViewModelPublisherTest.XCTAssert(
+            dim: stub.dimPublisherMock,
+            expectedNumberOfSinks: expectedNumberOfSinks,
+            expectedValue: expectedIsSinksValues ? stub.dimMock : .zero
+        )
+        TextLinkViewModelPublisherTest.XCTAssert(
+            hoverStyle: stub.hoverStylePublisherMock,
+            expectedNumberOfSinks: expectedNumberOfSinks,
+            expectedValue: expectedIsSinksValues ? stub.hoverStyleMock : .init()
+        )
         // **
 
         // Use Cases count (the parameters and returns are already test on load and init tests)
@@ -200,7 +211,6 @@ final class TextLinkViewModelTests: XCTestCase {
             givenFrameworkType: givenFrameworkType,
             givenText: textMock,
             givenTextColorToken: stub.colorMock,
-            givenTextDim: stub.dimMock,
             givenTextHighlightRange: textHighlightRangeMock,
             givenIsHighlighted: false,
             givenVariant: variantMock,
@@ -212,6 +222,29 @@ final class TextLinkViewModelTests: XCTestCase {
             expectedNumberOfCalls: expectedNumberOfCalls,
             givenTypographies: stub.typographiesMock,
             expectedReturnValue: stub.imageSizeMock
+        )
+        TextLinkGetColorUseCaseableMockTest.XCTAssert(
+            stub.getColorUseCaseMock,
+            expectedNumberOfCalls: expectedNumberOfCalls,
+            givenIntent: intentMock,
+            givenIsHighlighted: false,
+            givenColors: stub.themeMock.colors as? ColorsGeneratedMock,
+            expectedReturnValue: stub.colorMock
+        )
+        TextLinkGetDimUseCaseableMockTest.XCTAssert(
+            stub.getDimUseCaseMock,
+            expectedNumberOfCalls: expectedNumberOfCalls,
+            givenIntent: intentMock,
+            givenIsHighlighted: false,
+            givenDims: stub.themeMock.dims as? DimsGeneratedMock,
+            expectedReturnValue: stub.dimMock
+        )
+        TextLinkGetHoverStyleUseCaseableMockTest.XCTAssert(
+            stub.getHoverStyleUseCaseMock,
+            expectedNumberOfCalls: expectedNumberOfCalls,
+            givenTheme: stub.themeMock,
+            givenIntent: intentMock,
+            expectedReturnValue: stub.hoverStyleMock
         )
     }
 
@@ -261,6 +294,22 @@ final class TextLinkViewModelTests: XCTestCase {
             isTrailingImage: stub.isTrailingImagePublisherMock,
             expectedNumberOfSinks: 0
         )
+        TextLinkViewModelPublisherTest.XCTSinksCount(
+            dim: stub.dimPublisherMock,
+            expectedNumberOfSinks: 1
+        )
+        TextLinkViewModelPublisherTest.XCTSinksCount(
+            hoverStyle: stub.hoverStylePublisherMock,
+            expectedNumberOfSinks: 1
+        )
+        TextLinkViewModelPublisherTest.XCTSinksCount(
+            dim: stub.dimPublisherMock,
+            expectedNumberOfSinks: 1
+        )
+        TextLinkViewModelPublisherTest.XCTSinksCount(
+            hoverStyle: stub.hoverStylePublisherMock,
+            expectedNumberOfSinks: 1
+        )
         // **
 
         // Use Cases count (the parameters and returns are already test on load and init tests)
@@ -270,7 +319,7 @@ final class TextLinkViewModelTests: XCTestCase {
         )
         TextLinkGetAttributedStringUseCaseableMockTest.XCTCallsCount(
             stub.getAttributedStringUseCaseMock,
-            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextDimAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 1
+            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 1
         )
         TextLinkGetImageSizeUseCaseableMockTest.XCTCallsCount(
             stub.getImageSizeUseCaseMock,
@@ -609,6 +658,14 @@ final class TextLinkViewModelTests: XCTestCase {
             isTrailingImage: stub.isTrailingImagePublisherMock,
             expectedNumberOfSinks: givenIsDifferentNewValue ? 1 : 0
         )
+        TextLinkViewModelPublisherTest.XCTSinksCount(
+            dim: stub.dimPublisherMock,
+            expectedNumberOfSinks: 0
+        )
+        TextLinkViewModelPublisherTest.XCTSinksCount(
+            hoverStyle: stub.hoverStylePublisherMock,
+            expectedNumberOfSinks: 0
+        )
         // **
 
         // Use Cases count (the parameters and returns are already test on load and init tests)
@@ -618,7 +675,7 @@ final class TextLinkViewModelTests: XCTestCase {
         )
         TextLinkGetAttributedStringUseCaseableMockTest.XCTCallsCount(
             stub.getAttributedStringUseCaseMock,
-            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextDimAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 0
+            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 0
         )
         TextLinkGetImageSizeUseCaseableMockTest.XCTCallsCount(
             stub.getImageSizeUseCaseMock,
@@ -653,6 +710,14 @@ final class TextLinkViewModelTests: XCTestCase {
             isTrailingImage: stub.isTrailingImagePublisherMock,
             expectedNumberOfSinks: givenIsImageSizeDidUpdate ? 1 : 0
         )
+        TextLinkViewModelPublisherTest.XCTSinksCount(
+            dim: stub.dimPublisherMock,
+            expectedNumberOfSinks: givenIsContentDidUpdate ? 1 : 0
+        )
+        TextLinkViewModelPublisherTest.XCTSinksCount(
+            hoverStyle: stub.hoverStylePublisherMock,
+            expectedNumberOfSinks: givenIsContentDidUpdate ? 1 : 0
+        )
         // **
 
         // Use Cases count (the parameters and returns are already test on load and init tests)
@@ -662,11 +727,23 @@ final class TextLinkViewModelTests: XCTestCase {
         )
         TextLinkGetAttributedStringUseCaseableMockTest.XCTCallsCount(
             stub.getAttributedStringUseCaseMock,
-            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextDimAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: givenIsContentDidUpdate ? 1 : 0
+            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: givenIsContentDidUpdate ? 1 : 0
         )
         TextLinkGetImageSizeUseCaseableMockTest.XCTCallsCount(
             stub.getImageSizeUseCaseMock,
             executeWithTypographiesNumberOfCalls: givenIsImageSizeDidUpdate ? 1 : 0
+        )
+        TextLinkGetColorUseCaseableMockTest.XCTCallsCount(
+            stub.getColorUseCaseMock,
+            executeWithIntentAndIsHighlightedAndColorsNumberOfCalls: givenIsContentDidUpdate ? 1 : 0
+        )
+        TextLinkGetDimUseCaseableMockTest.XCTCallsCount(
+            stub.getDimUseCaseMock,
+            executeWithIntentAndIsHighlightedAndDimsNumberOfCalls: givenIsContentDidUpdate ? 1 : 0
+        )
+        TextLinkGetHoverStyleUseCaseableMockTest.XCTCallsCount(
+            stub.getHoverStyleUseCaseMock,
+            executeWithThemeAndIntentNumberOfCalls: givenIsContentDidUpdate ? 1 : 0
         )
     }
 
@@ -709,6 +786,14 @@ final class TextLinkViewModelTests: XCTestCase {
             isTrailingImage: stub.isTrailingImagePublisherMock,
             expectedNumberOfSinks: 0
         )
+        TextLinkViewModelPublisherTest.XCTSinksCount(
+            dim: stub.dimPublisherMock,
+            expectedNumberOfSinks: 0
+        )
+        TextLinkViewModelPublisherTest.XCTSinksCount(
+            hoverStyle: stub.hoverStylePublisherMock,
+            expectedNumberOfSinks: 0
+        )
         // **
 
         // Use Cases
@@ -718,11 +803,23 @@ final class TextLinkViewModelTests: XCTestCase {
         )
         TextLinkGetAttributedStringUseCaseableMockTest.XCTCallsCount(
             stub.getAttributedStringUseCaseMock,
-            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextDimAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 0
+            executeWithFrameworkTypeAndTextAndTextColorTokenAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesNumberOfCalls: 0
         )
         TextLinkGetImageSizeUseCaseableMockTest.XCTCallsCount(
             stub.getImageSizeUseCaseMock,
             executeWithTypographiesNumberOfCalls: 1
+        )
+        TextLinkGetColorUseCaseableMockTest.XCTCallsCount(
+            stub.getColorUseCaseMock,
+            executeWithIntentAndIsHighlightedAndColorsNumberOfCalls: 0
+        )
+        TextLinkGetDimUseCaseableMockTest.XCTCallsCount(
+            stub.getDimUseCaseMock,
+            executeWithIntentAndIsHighlightedAndDimsNumberOfCalls: 0
+        )
+        TextLinkGetHoverStyleUseCaseableMockTest.XCTCallsCount(
+            stub.getHoverStyleUseCaseMock,
+            executeWithThemeAndIntentNumberOfCalls: 0
         )
     }
 }
@@ -750,6 +847,14 @@ private final class Stub: TextLinkViewModelStub {
         return self.viewModel.alignment.isTrailingImage
     }
 
+    let hoverStyleMock = TextLinkHoverStyle(
+        horizontalPadding: 2,
+        verticalPadding: 3,
+        cornerRadius: 4,
+        backgroundColor: ColorTokenGeneratedMock.blue(),
+        dim: 0.1
+    )
+
     // MARK: - Initialization
 
     init(
@@ -772,11 +877,14 @@ private final class Stub: TextLinkViewModelStub {
         let getDimUseCaseMock = TextLinkGetDimUseCaseableGeneratedMock()
         getDimUseCaseMock.executeWithIntentAndIsHighlightedAndDimsReturnValue = self.dimMock
 
+        let getHoverStyleUseCaseMock = TextLinkGetHoverStyleUseCaseableGeneratedMock()
+        getHoverStyleUseCaseMock.executeWithThemeAndIntentReturnValue = self.hoverStyleMock
+
         let getTypographiesUseCaseMock = TextLinkGetTypographiesUseCaseableGeneratedMock()
         getTypographiesUseCaseMock.executeWithTextLinkTypographyAndTypographyReturnValue = self.typographiesMock
 
         let getAttributedStringUseCaseMock = TextLinkGetAttributedStringUseCaseableGeneratedMock()
-        getAttributedStringUseCaseMock.executeWithFrameworkTypeAndTextAndTextColorTokenAndTextDimAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesReturnValue = self.attributedStringMock
+        getAttributedStringUseCaseMock.executeWithFrameworkTypeAndTextAndTextColorTokenAndTextHighlightRangeAndIsHighlightedAndVariantAndTypographiesReturnValue = self.attributedStringMock
 
         let getImageSizeUseCaseMock = TextLinkGetImageSizeUseCaseableGeneratedMock()
         getImageSizeUseCaseMock.executeWithTypographiesReturnValue = self.imageSizeMock
@@ -794,6 +902,7 @@ private final class Stub: TextLinkViewModelStub {
             alignment: alignment,
             getColorUseCase: getColorUseCaseMock,
             getDimUseCase: getDimUseCaseMock,
+            getHoverStyleUseCase: getHoverStyleUseCaseMock,
             getTypographiesUseCase: getTypographiesUseCaseMock,
             getAttributedStringUseCase: getAttributedStringUseCaseMock,
             getImageSizeUseCase: getImageSizeUseCaseMock
@@ -803,6 +912,7 @@ private final class Stub: TextLinkViewModelStub {
             viewModel: viewModel,
             getColorUseCaseMock: getColorUseCaseMock,
             getDimUseCaseMock: getDimUseCaseMock,
+            getHoverStyleUseCaseMock: getHoverStyleUseCaseMock,
             getTypographiesUseCaseMock: getTypographiesUseCaseMock,
             getAttributedStringUseCaseMock: getAttributedStringUseCaseMock,
             getImageSizeUseCaseMock: getImageSizeUseCaseMock
