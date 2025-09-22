@@ -181,6 +181,11 @@ public final class TextLinkUIView: UIControl {
         set {
             super.isHighlighted = newValue
             self.viewModel.isHighlighted = newValue
+
+            self.updateExtendedPressedBackground(
+                layer: &self.hoverLayer,
+                viewModel: self.viewModel
+            )
         }
     }
 
@@ -201,6 +206,8 @@ public final class TextLinkUIView: UIControl {
     private var imageViewHeightConstraint: NSLayoutConstraint?
 
     @ScaledUIMetric private var contentStackViewSpacing: CGFloat = 0
+
+    private var hoverLayer: CAShapeLayer?
 
     private var subscriptions = Set<AnyCancellable>()
 
@@ -403,6 +410,13 @@ public final class TextLinkUIView: UIControl {
 
             self.contentStackView.semanticContentAttribute = isTrailingImage ? .forceRightToLeft : .forceLeftToRight
         }
+
+        // Dot
+        self.viewModel.$dim.subscribe(in: &self.subscriptions) { [weak self] dim in
+            guard let self else { return }
+
+            self.alpha = dim
+        }
     }
 
     // MARK: - Label priorities
@@ -431,5 +445,48 @@ public final class TextLinkUIView: UIControl {
         self.updateContentStackViewSpacing()
 
         self.viewModel.contentSizeCategoryDidUpdate()
+    }
+}
+
+extension UIControl {
+
+    func updateExtendedPressedBackground(
+        layer: inout CAShapeLayer?,
+        viewModel: TextLinkViewModel
+    ) {
+        // Remove previous layer
+        layer?.removeFromSuperlayer()
+
+        if self.isHighlighted {
+            let backgroundColor = viewModel.hoverStyle.backgroundColor.uiColor.withAlphaComponent(
+                viewModel.hoverStyle.dim
+            )
+
+            let radius = viewModel.hoverStyle.cornerRadius
+
+            let path = UIBezierPath(
+                roundedRect: self.bounds.insetBy(
+                    dx: -viewModel.hoverStyle.horizontalPadding,
+                    dy: -viewModel.hoverStyle.verticalPadding
+                ),
+                byRoundingCorners: [
+                    .topLeft,
+                    .bottomLeft,
+                    .topRight,
+                    .bottomRight
+                ],
+                cornerRadii: CGSize(
+                    width: radius,
+                    height: radius
+                )
+            )
+
+            let shape = CAShapeLayer()
+            shape.path = path.cgPath
+            shape.fillColor = backgroundColor.resolvedColor(with: self.traitCollection).cgColor
+
+            self.layer.addSublayer(shape)
+            layer = shape
+        }
     }
 }

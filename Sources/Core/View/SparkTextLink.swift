@@ -27,6 +27,7 @@ public struct TextLinkView: View {
     @Environment(\.sizeCategory) var sizeCategory
 
     @ScaledMetric private var spacing: CGFloat
+    @State private var animatedId = UUID()
 
     // MARK: - Initialization
 
@@ -87,7 +88,37 @@ public struct TextLinkView: View {
         Button(action: self.action) {
             self.content()
         }
-        .buttonStyle(PressedButtonStyle(isPressed: self.$viewModel.isHighlighted))
+        .buttonStyle(PressedButtonStyle(
+            isPressed: self.$viewModel.isHighlighted,
+            animationDuration: TextLinkConstants.animationDuration
+        ))
+        .overlay {
+            VStack {
+                if self.viewModel.isHighlighted {
+                    GeometryReader { proxy in
+                        RoundedRectangle(cornerRadius: self.viewModel.hoverStyle.cornerRadius)
+                            .path(in: .init(
+                                origin: .init(
+                                    x: -self.viewModel.hoverStyle.horizontalPadding,
+                                    y: -self.viewModel.hoverStyle.verticalPadding
+                                ),
+                                size: .init(
+                                    width: proxy.size.width + self.viewModel.hoverStyle.horizontalPadding * 2,
+                                    height: proxy.size.height + self.viewModel.hoverStyle.verticalPadding * 2
+                                )
+                            ))
+                            .fill(self.viewModel.hoverStyle.backgroundColor)
+                            .opacity(self.viewModel.hoverStyle.dim)
+                    }
+                } else {
+                    EmptyView()
+                }
+            }
+            .optionalAnimation(
+                .easeOut(duration: TextLinkConstants.animationDuration),
+                value: self.viewModel.isHighlighted
+            )
+        }
         .accessibilityIdentifier(TextLinkAccessibilityIdentifier.view)
         .accessibilityRemoveTraits(.isButton)
         .accessibilityAddTraits(.isLink)
@@ -109,6 +140,7 @@ public struct TextLinkView: View {
                 self.text()
             }
         }
+        .opacity(self.viewModel.dim)
     }
 
     @ViewBuilder
