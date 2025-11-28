@@ -2,130 +2,537 @@
 //  TextLinkGetColorUseCaseTests.swift
 //  SparkComponentTextLinkUnitTests
 //
-//  Created by robin.lemaire on 05/12/2023.
-//  Copyright © 2023 Leboncoin. All rights reserved.
+//  Created by robin.lemaire on 25/11/2025.
+//  Copyright © 2025 Leboncoin. All rights reserved.
 //
 
 import XCTest
-import SwiftUI
-@testable import SparkComponentTextLink
-import SparkTheming
+@_spi(SI_SPI) import SparkTheming
 @_spi(SI_SPI) import SparkThemingTesting
+@testable import SparkComponentTextLink
 
 final class TextLinkGetColorUseCaseTests: XCTestCase {
 
+    // MARK: - Properties
+
+    private let theme = ThemeGeneratedMock.mocked()
+    private let useCase = TextLinkGetColorUseCase()
+
     // MARK: - Tests
 
-    func test_execute_for_all_intents_when_isHighlighted_is_false() {
+    func test_execute_accent_not_highlighted() {
         // GIVEN
-        let useCase = TextLinkGetColorUseCase()
-        let colorsMock = ColorsGeneratedMock.mocked()
-
-        let givenIntents = TextLinkIntent.allCases
+        let intent = TextLinkIntent.accent
+        let isHighlighted = false
 
         // WHEN
-        for givenIntent in givenIntents {
-            let colorToken = useCase.execute(
-                intent: givenIntent,
-                isHighlighted: false,
-                colors: colorsMock
-            )
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
 
-            let expectedColorToken = givenIntent.expectedColorTokenWithoutHighlighted(
-                from: colorsMock
-            )
-
-            // THEN
-            XCTAssertIdentical(
-                colorToken as? ColorTokenGeneratedMock,
-                expectedColorToken as? ColorTokenGeneratedMock,
-                "Wrong color for .\(givenIntent) case"
-            )
-        }
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.accent.accent))
     }
 
-    func test_execute_for_all_intents_when_isHighlighted_is_true() {
+    func test_execute_accent_highlighted() {
         // GIVEN
-        let useCase = TextLinkGetColorUseCase()
-        let colorsMock = ColorsGeneratedMock.mocked()
-
-        let givenIntents = TextLinkIntent.allCases
+        let intent = TextLinkIntent.accent
+        let isHighlighted = true
 
         // WHEN
-        for givenIntent in givenIntents {
-            let colorToken = useCase.execute(
-                intent: givenIntent,
-                isHighlighted: true,
-                colors: colorsMock
-            )
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
 
-            let expectedColorToken = givenIntent.expectedColorTokenWithHighlighted(
-                from: colorsMock
-            )
-
-            // THEN
-            XCTAssertIdentical(
-                colorToken as? ColorTokenGeneratedMock,
-                expectedColorToken as? ColorTokenGeneratedMock,
-                "Wrong color for .\(givenIntent) case"
-            )
-        }
-    }
-}
-
-// MARK: - Extension
-
-private extension TextLinkIntent {
-
-    func expectedColorTokenWithHighlighted(from colorsMock: ColorsGeneratedMock) -> any ColorToken {
-        switch self {
-        case .accent: colorsMock.states.accentPressed
-        case .accentContainer: colorsMock.accent.onAccentContainer
-        case .onAccentContainer: colorsMock.accent.onAccentContainer
-        case .alert: colorsMock.states.alertPressed
-        case .alertContainer: colorsMock.feedback.onAlertContainer
-        case .basic: colorsMock.states.basicPressed
-        case .basicContainer: colorsMock.basic.onBasicContainer
-        case .danger: colorsMock.states.errorPressed
-        case .dangerContainer: colorsMock.feedback.onErrorContainer
-        case .info: colorsMock.states.infoPressed
-        case .infoContainer: colorsMock.feedback.onInfoContainer
-        case .main: colorsMock.states.mainPressed
-        case .mainContainer: colorsMock.main.onMainContainer
-        case .neutral: colorsMock.states.neutralPressed
-        case .neutralContainer: colorsMock.feedback.onNeutralContainer
-        case .surface: colorsMock.base.onSurface
-        case .onSurface: colorsMock.base.onSurface
-        case .success: colorsMock.states.successPressed
-        case .successContainer: colorsMock.feedback.onSuccessContainer
-        case .support: colorsMock.states.supportPressed
-        case .supportContainer: colorsMock.support.onSupportContainer
-        }
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.states.accentPressed))
     }
 
-    func expectedColorTokenWithoutHighlighted(from colorsMock: ColorsGeneratedMock) -> any ColorToken {
-        switch self {
-        case .accent: colorsMock.accent.accent
-        case .accentContainer: colorsMock.accent.onAccentContainer
-        case .onAccentContainer: colorsMock.accent.onAccentContainer
-        case .alert: colorsMock.feedback.alert
-        case .alertContainer: colorsMock.feedback.onAlertContainer
-        case .basic: colorsMock.basic.basic
-        case .basicContainer: colorsMock.basic.onBasicContainer
-        case .danger: colorsMock.feedback.error
-        case .dangerContainer: colorsMock.feedback.onErrorContainer
-        case .info: colorsMock.feedback.info
-        case .infoContainer: colorsMock.feedback.onInfoContainer
-        case .main: colorsMock.main.main
-        case .mainContainer: colorsMock.main.onMainContainer
-        case .neutral: colorsMock.feedback.neutral
-        case .neutralContainer: colorsMock.feedback.onNeutralContainer
-        case .surface: colorsMock.base.onSurface
-        case .onSurface: colorsMock.base.onSurface
-        case .success: colorsMock.feedback.success
-        case .successContainer: colorsMock.feedback.onSuccessContainer
-        case .support: colorsMock.support.support
-        case .supportContainer: colorsMock.support.onSupportContainer
-        }
+    func test_execute_alert_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.alert
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.feedback.alert))
+    }
+
+    func test_execute_alert_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.alert
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.states.alertPressed))
+    }
+
+    func test_execute_basic_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.basic
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.basic.basic))
+    }
+
+    func test_execute_basic_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.basic
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.states.basicPressed))
+    }
+
+    func test_execute_danger_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.danger
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.feedback.error))
+    }
+
+    func test_execute_danger_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.danger
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.states.errorPressed))
+    }
+
+    func test_execute_info_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.info
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.feedback.info))
+    }
+
+    func test_execute_info_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.info
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.states.infoPressed))
+    }
+
+    func test_execute_main_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.main
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.main.main))
+    }
+
+    func test_execute_main_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.main
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.states.mainPressed))
+    }
+
+    func test_execute_neutral_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.neutral
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.feedback.neutral))
+    }
+
+    func test_execute_neutral_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.neutral
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.states.neutralPressed))
+    }
+
+    func test_execute_success_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.success
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.feedback.success))
+    }
+
+    func test_execute_success_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.success
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.states.successPressed))
+    }
+
+    func test_execute_support_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.support
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.support.support))
+    }
+
+    func test_execute_support_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.support
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.states.supportPressed))
+    }
+
+    func test_execute_custom() {
+        // GIVEN
+        let customColorToken = ColorTokenGeneratedMock.red()
+        let intent = TextLinkIntent.custom(customColorToken)
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(customColorToken))
+    }
+
+    func test_execute_custom_highlighted() {
+        // GIVEN
+        let customColorToken = ColorTokenGeneratedMock.red()
+        let intent = TextLinkIntent.custom(customColorToken)
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(customColorToken))
+    }
+
+    // MARK: - Deprecated Tests
+
+    func test_execute_deprecated_accent_container() {
+        // GIVEN
+        let intent = TextLinkIntent.accentContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.accent.onAccentContainer))
+    }
+
+    func test_execute_deprecated_surface() {
+        // GIVEN
+        let intent = TextLinkIntent.surface
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.base.onSurface))
+    }
+
+    func test_execute_deprecated_alert_container() {
+        // GIVEN
+        let intent = TextLinkIntent.alertContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.feedback.onAlertContainer))
+    }
+
+    func test_execute_deprecated_basic_container() {
+        // GIVEN
+        let intent = TextLinkIntent.basicContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.basic.onBasicContainer))
+    }
+
+    func test_execute_deprecated_danger_container() {
+        // GIVEN
+        let intent = TextLinkIntent.dangerContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.feedback.onErrorContainer))
+    }
+
+    func test_execute_deprecated_info_container() {
+        // GIVEN
+        let intent = TextLinkIntent.infoContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.feedback.onInfoContainer))
+    }
+
+    func test_execute_deprecated_main_container() {
+        // GIVEN
+        let intent = TextLinkIntent.mainContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.main.onMainContainer))
+    }
+
+    func test_execute_deprecated_neutral_container() {
+        // GIVEN
+        let intent = TextLinkIntent.neutralContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.feedback.onNeutralContainer))
+    }
+
+    func test_execute_deprecated_on_accent_container() {
+        // GIVEN
+        let intent = TextLinkIntent.onAccentContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.accent.onAccentContainer))
+    }
+
+    func test_execute_deprecated_on_surface() {
+        // GIVEN
+        let intent = TextLinkIntent.onSurface
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.base.onSurface))
+    }
+
+    func test_execute_deprecated_success_container() {
+        // GIVEN
+        let intent = TextLinkIntent.successContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.feedback.onSuccessContainer))
+    }
+
+    func test_execute_deprecated_support_container() {
+        // GIVEN
+        let intent = TextLinkIntent.supportContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertTrue(result.equals(theme.colors.support.onSupportContainer))
     }
 }

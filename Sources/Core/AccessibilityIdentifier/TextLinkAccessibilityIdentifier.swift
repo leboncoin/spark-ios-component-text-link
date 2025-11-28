@@ -2,8 +2,8 @@
 //  TextLinkAccessibilityIdentifier.swift
 //  SparkComponentTextLink
 //
-//  Created by robin.lemaire on 05/12/2023.
-//  Copyright © 2023 Leboncoin. All rights reserved.
+//  Created by robin.lemaire on 25/11/2025.
+//  Copyright © 2025 Leboncoin. All rights reserved.
 //
 
 /// The accessibility identifiers for the textLink.
