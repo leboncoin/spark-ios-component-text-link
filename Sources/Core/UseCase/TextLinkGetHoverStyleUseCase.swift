@@ -2,7 +2,7 @@
 //  TextLinkGetHoverStyleUseCase.swift
 //  SparkComponentTextLink
 //
-//  Created by robin.lemaire on 22/09/2025.
+//  Created by robin.lemaire on 20/11/2025.
 //  Copyright © 2025 Leboncoin. All rights reserved.
 //
 
@@ -10,7 +10,6 @@ import SparkTheming
 
 // sourcery: AutoMockable, AutoMockTest
 protocol TextLinkGetHoverStyleUseCaseable {
-
     // sourcery: theme = "Identical"
     func execute(
         theme: any Theme,
@@ -38,6 +37,7 @@ struct TextLinkGetHoverStyleUseCase: TextLinkGetHoverStyleUseCaseable {
         case .surface, .onSurface: colors.base.surface
         case .success, .successContainer: colors.feedback.success
         case .support, .supportContainer: colors.support.support
+        case .custom(let colorToken): colorToken
         }
 
         return .init(

@@ -2,103 +2,186 @@
 //  TextLinkGetTypographiesUseCaseTests.swift
 //  SparkComponentTextLinkUnitTests
 //
-//  Created by robin.lemaire on 06/12/2023.
-//  Copyright © 2023 Leboncoin. All rights reserved.
+//  Created by robin.lemaire on 25/11/2025.
+//  Copyright © 2025 Leboncoin. All rights reserved.
 //
 
 import XCTest
-import SwiftUI
-@testable import SparkComponentTextLink
+@_spi(SI_SPI) import SparkTheming
 @_spi(SI_SPI) import SparkThemingTesting
+@testable import SparkComponentTextLink
 
 final class TextLinkGetTypographiesUseCaseTests: XCTestCase {
 
+    // MARK: - Properties
+
+    private let theme = ThemeGeneratedMock.mocked()
+    private let useCase = TextLinkGetTypographiesUseCase()
+
     // MARK: - Tests
 
-    func test_execute_for_all_intents() {
+    func test_execute_display1() {
         // GIVEN
-        let useCase = TextLinkGetTypographiesUseCase()
-        let typographyMock = TypographyGeneratedMock.mocked()
-
-        let givenTypographies = TextLinkTypography.allCases
+        let typography = TextLinkTypography.display1
 
         // WHEN
-        for givenTypography in givenTypographies {
-            let typographies = useCase.execute(
-                textLinkTypography: givenTypography,
-                typography: typographyMock
-            )
+        let result = self.useCase.execute(
+            theme: self.theme,
+            typography: typography
+        )
 
-            let expectedTypographies = givenTypography.expectedTypographies(
-                from: typographyMock
-            )
-
-            // THEN
-            XCTAssertEqual(
-                typographies,
-                expectedTypographies,
-                "Wrong typographies for .\(givenTypography) case"
-            )
-        }
+        // THEN
+        XCTAssertTrue(result.normal.equals(self.theme.typography.display1))
+        XCTAssertTrue(result.highlight.equals(self.theme.typography.display1))
     }
-}
 
-// MARK: - Extension
+    func test_execute_display2() {
+        // GIVEN
+        let typography = TextLinkTypography.display2
 
-private extension TextLinkTypography {
-
-    func expectedTypographies(from typographyMock: TypographyGeneratedMock) -> TextLinkTypographies {
-        return switch self {
-        case .display1: .init(
-            normal: typographyMock.display1,
-            highlight: typographyMock.display1
-        )
-        case .display2: .init(
-            normal: typographyMock.display2,
-            highlight: typographyMock.display2
-        )
-        case .display3: .init(
-            normal: typographyMock.display3,
-            highlight: typographyMock.display3
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            typography: typography
         )
 
-        case .headline1: .init(
-            normal: typographyMock.headline1,
-            highlight: typographyMock.headline1
-        )
-        case .headline2: .init(
-            normal: typographyMock.headline2,
-            highlight: typographyMock.headline2
+        // THEN
+        XCTAssertTrue(result.normal.equals(self.theme.typography.display2))
+        XCTAssertTrue(result.highlight.equals(self.theme.typography.display2))
+    }
+
+    func test_execute_display3() {
+        // GIVEN
+        let typography = TextLinkTypography.display3
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            typography: typography
         )
 
-        case .subhead: .init(
-            normal: typographyMock.subhead,
-            highlight: typographyMock.subhead
+        // THEN
+        XCTAssertTrue(result.normal.equals(self.theme.typography.display3))
+        XCTAssertTrue(result.highlight.equals(self.theme.typography.display3))
+    }
+
+    func test_execute_headline1() {
+        // GIVEN
+        let typography = TextLinkTypography.headline1
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            typography: typography
         )
 
-        case .body1: .init(
-            normal: typographyMock.body1,
-            highlight: typographyMock.body1Highlight
-        )
-        case .body2: .init(
-            normal: typographyMock.body2,
-            highlight: typographyMock.body2Highlight
+        // THEN
+        XCTAssertTrue(result.normal.equals(self.theme.typography.headline1))
+        XCTAssertTrue(result.highlight.equals(self.theme.typography.headline1))
+    }
+
+    func test_execute_headline2() {
+        // GIVEN
+        let typography = TextLinkTypography.headline2
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            typography: typography
         )
 
-        case .caption: .init(
-            normal: typographyMock.caption,
-            highlight: typographyMock.captionHighlight
+        // THEN
+        XCTAssertTrue(result.normal.equals(self.theme.typography.headline2))
+        XCTAssertTrue(result.highlight.equals(self.theme.typography.headline2))
+    }
+
+    func test_execute_subhead() {
+        // GIVEN
+        let typography = TextLinkTypography.subhead
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            typography: typography
         )
 
-        case .small: .init(
-            normal: typographyMock.small,
-            highlight: typographyMock.smallHighlight
+        // THEN
+        XCTAssertTrue(result.normal.equals(self.theme.typography.subhead))
+        XCTAssertTrue(result.highlight.equals(self.theme.typography.subhead))
+    }
+
+    func test_execute_body1() {
+        // GIVEN
+        let typography = TextLinkTypography.body1
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            typography: typography
         )
 
-        case .callout: .init(
-            normal: typographyMock.callout,
-            highlight: typographyMock.callout
+        // THEN
+        XCTAssertTrue(result.normal.equals(self.theme.typography.body1))
+        XCTAssertTrue(result.highlight.equals(self.theme.typography.body1Highlight))
+    }
+
+    func test_execute_body2() {
+        // GIVEN
+        let typography = TextLinkTypography.body2
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            typography: typography
         )
-        }
+
+        // THEN
+        XCTAssertTrue(result.normal.equals(self.theme.typography.body2))
+        XCTAssertTrue(result.highlight.equals(self.theme.typography.body2Highlight))
+    }
+
+    func test_execute_caption() {
+        // GIVEN
+        let typography = TextLinkTypography.caption
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            typography: typography
+        )
+
+        // THEN
+        XCTAssertTrue(result.normal.equals(self.theme.typography.caption))
+        XCTAssertTrue(result.highlight.equals(self.theme.typography.captionHighlight))
+    }
+
+    func test_execute_small() {
+        // GIVEN
+        let typography = TextLinkTypography.small
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            typography: typography
+        )
+
+        // THEN
+        XCTAssertTrue(result.normal.equals(self.theme.typography.small))
+        XCTAssertTrue(result.highlight.equals(self.theme.typography.smallHighlight))
+    }
+
+    func test_execute_callout() {
+        // GIVEN
+        let typography = TextLinkTypography.callout
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            typography: typography
+        )
+
+        // THEN
+        XCTAssertTrue(result.normal.equals(self.theme.typography.callout))
+        XCTAssertTrue(result.highlight.equals(self.theme.typography.callout))
     }
 }

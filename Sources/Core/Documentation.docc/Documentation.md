@@ -1,6 +1,9 @@
 # ``SparkComponentTextLink``
 
-The Spark Textlink is a reference to a resource.
+A textlink is a reference to a resource.
+
+
+It can be external (e.g. a different web page) or internal (e.g. a specific element in the current page).
 
 ## Overview
 
@@ -10,12 +13,27 @@ It can be external (e.g. a different web page) or internal (e.g. a specific elem
 
 ### Implementation
 
-- On SwiftUI, you need to use the ``TextLinkView`` View.
-- On UIKit, you need to use the ``TextLinkUIView`` which inherit from an UIControl.
+- On SwiftUI, you need to use the ``SparkTextLink`` View.
+- On UIKit, you need to use the ``SparkUITextLink`` which inherit from an UIControl.
+
+### Accessibility
+
+By default, the accessibilityLabel is equals to the text.
+
+To override this value, you need to set a new **accessibilityLabel**.
+
+
+The image is not accessible.
 
 ### Rendering
+- With image :
+![TextLink rendering.](textlink_with_image.png)
 
-![Component rendering.](component.png)
+- Without image :
+![TextLink rendering.](textlink_without_image.png)
+
+- With a long text :
+![TextLink rendering.](textlink_with_long_text.png)
 
 ### Resources
 

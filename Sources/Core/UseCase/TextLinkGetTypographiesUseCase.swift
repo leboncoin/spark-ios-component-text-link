@@ -2,18 +2,19 @@
 //  TextLinkGetTypographiesUseCase.swift
 //  SparkComponentTextLink
 //
-//  Created by robin.lemaire on 06/12/2023.
-//  Copyright © 2023 Leboncoin. All rights reserved.
+//  Created by robin.lemaire on 20/11/2025.
+//  Copyright © 2025 Leboncoin. All rights reserved.
 //
 
 import SparkTheming
 
 // sourcery: AutoMockable, AutoMockTest
 protocol TextLinkGetTypographiesUseCaseable {
-
-    // sourcery: typography = "Identical"
-    func execute(textLinkTypography: TextLinkTypography,
-                 typography: any Typography) -> TextLinkTypographies
+    // sourcery: theme = "Identical"
+    func execute(
+        theme: any Theme,
+        typography: TextLinkTypography
+    ) -> TextLinkTypographies
 }
 
 struct TextLinkGetTypographiesUseCase: TextLinkGetTypographiesUseCaseable {
@@ -21,9 +22,10 @@ struct TextLinkGetTypographiesUseCase: TextLinkGetTypographiesUseCaseable {
     // MARK: - Methods
 
     func execute(
-        textLinkTypography: TextLinkTypography,
-        typography: any Typography
+        theme: any Theme,
+        typography textLinkTypography: TextLinkTypography
     ) -> TextLinkTypographies {
+        let typography = theme.typography
         switch textLinkTypography {
         case .display1:
             return .init(
