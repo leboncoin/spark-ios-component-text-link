@@ -2,108 +2,425 @@
 //  TextLinkGetDimUseCaseTests.swift
 //  SparkComponentTextLinkUnitTests
 //
-//  Created by robin.lemaire on 03/06/2025.
-//  Copyright © 2023 Leboncoin. All rights reserved.
+//  Created by robin.lemaire on 25/11/2025.
+//  Copyright © 2025 Leboncoin. All rights reserved.
 //
 
 import XCTest
-import SwiftUI
-@testable import SparkComponentTextLink
-import SparkTheming
+@_spi(SI_SPI) import SparkTheming
 @_spi(SI_SPI) import SparkThemingTesting
+@testable import SparkComponentTextLink
 
 final class TextLinkGetDimUseCaseTests: XCTestCase {
 
+    // MARK: - Properties
+
+    private let theme = ThemeGeneratedMock.mocked()
+    private let useCase = TextLinkGetDimUseCase()
+
     // MARK: - Tests
 
-    func test_execute_for_all_intents_when_isHighlighted_is_false() {
+    func test_execute_basic_intent_not_highlighted() {
         // GIVEN
-        let useCase = TextLinkGetDimUseCase()
-        let dimsMock = DimsGeneratedMock.mocked()
-
-        let givenIntents = TextLinkIntent.allCases
+        let intent = TextLinkIntent.basic
+        let isHighlighted = false
 
         // WHEN
-        for givenIntent in givenIntents {
-            let dim = useCase.execute(
-                intent: givenIntent,
-                isHighlighted: false,
-                dims: dimsMock
-            )
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
 
-            let expectedDim = givenIntent.expectedDimWithoutHighlighted(
-                from: dimsMock
-            )
-
-            // THEN
-            XCTAssertEqual(
-                dim,
-                expectedDim,
-                "Wrong dim for .\(givenIntent) case"
-            )
-        }
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
     }
 
-    func test_execute_for_all_intents_when_isHighlighted_is_true() {
+    func test_execute_basic_intent_highlighted() {
         // GIVEN
-        let useCase = TextLinkGetDimUseCase()
-        let dimsMock = DimsGeneratedMock.mocked()
-
-        let givenIntents = TextLinkIntent.allCases
+        let intent = TextLinkIntent.basic
+        let isHighlighted = true
 
         // WHEN
-        for givenIntent in givenIntents {
-            let dim = useCase.execute(
-                intent: givenIntent,
-                isHighlighted: true,
-                dims: dimsMock
-            )
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
 
-            let expectedDim = givenIntent.expectedDimWithHighlighted(
-                from: dimsMock
-            )
-
-            // THEN
-            XCTAssertEqual(
-                dim,
-                expectedDim,
-                "Wrong dim for .\(givenIntent) case"
-            )
-        }
-    }
-}
-
-// MARK: - Extension
-
-private extension TextLinkIntent {
-
-    func expectedDimWithHighlighted(from dimsMock: DimsGeneratedMock) -> CGFloat {
-        return switch self {
-        case .accent: dimsMock.none
-        case .accentContainer: dimsMock.dim1
-        case .onAccentContainer: dimsMock.dim1
-        case .alert: dimsMock.none
-        case .alertContainer: dimsMock.dim1
-        case .basic: dimsMock.none
-        case .basicContainer: dimsMock.dim1
-        case .danger: dimsMock.none
-        case .dangerContainer: dimsMock.dim1
-        case .info: dimsMock.none
-        case .infoContainer: dimsMock.dim1
-        case .main: dimsMock.none
-        case .mainContainer: dimsMock.dim1
-        case .neutral: dimsMock.none
-        case .neutralContainer: dimsMock.dim1
-        case .surface: dimsMock.none
-        case .onSurface: dimsMock.none
-        case .success: dimsMock.none
-        case .successContainer: dimsMock.dim1
-        case .support: dimsMock.none
-        case .supportContainer: dimsMock.dim1
-        }
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
     }
 
-    func expectedDimWithoutHighlighted(from dimsMock: DimsGeneratedMock) -> CGFloat {
-        return dimsMock.none
+    func test_execute_accent_intent_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.accent
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_custom_intent_not_highlighted() {
+        // GIVEN
+        let customColorToken = ColorTokenGeneratedMock.red()
+        let intent = TextLinkIntent.custom(customColorToken)
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_custom_intent_highlighted() {
+        // GIVEN
+        let customColorToken = ColorTokenGeneratedMock.red()
+        let intent = TextLinkIntent.custom(customColorToken)
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.dim1)
+    }
+
+    // MARK: - Deprecated Tests
+
+    func test_execute_accent_container_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.accentContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_accent_container_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.accentContainer
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.dim1)
+    }
+
+    func test_execute_on_accent_container_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.onAccentContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_on_accent_container_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.onAccentContainer
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.dim1)
+    }
+
+    func test_execute_alert_container_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.alertContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_alert_container_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.alertContainer
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.dim1)
+    }
+
+    func test_execute_basic_container_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.basicContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_basic_container_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.basicContainer
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.dim1)
+    }
+
+    func test_execute_danger_container_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.dangerContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_danger_container_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.dangerContainer
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.dim1)
+    }
+
+    func test_execute_info_container_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.infoContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_info_container_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.infoContainer
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.dim1)
+    }
+
+    func test_execute_main_container_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.mainContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_main_container_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.mainContainer
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.dim1)
+    }
+
+    func test_execute_neutral_container_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.neutralContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_neutral_container_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.neutralContainer
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.dim1)
+    }
+
+    func test_execute_success_container_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.successContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_success_container_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.successContainer
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.dim1)
+    }
+
+    func test_execute_support_container_not_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.supportContainer
+        let isHighlighted = false
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.none)
+    }
+
+    func test_execute_support_container_highlighted() {
+        // GIVEN
+        let intent = TextLinkIntent.supportContainer
+        let isHighlighted = true
+
+        // WHEN
+        let result = self.useCase.execute(
+            theme: self.theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
+
+        // THEN
+        XCTAssertEqual(result, theme.dims.dim1)
     }
 }

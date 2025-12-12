@@ -2,8 +2,8 @@
 //  TextLinkTypographiesMock+ExtensionTests.swift
 //  SparkComponentTextLinkUnitTests
 //
-//  Created by robin.lemaire on 14/12/2023.
-//  Copyright © 2023 Leboncoin. All rights reserved.
+//  Created by robin.lemaire on 25/11/2025.
+//  Copyright © 2025 Leboncoin. All rights reserved.
 //
 
 @testable import SparkComponentTextLink

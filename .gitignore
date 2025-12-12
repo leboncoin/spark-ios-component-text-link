@@ -7,7 +7,7 @@ DerivedData/
 .swiftpm/
 *Generated/
 Package.resolved
-
+.home/
 
 # SwiftLint Remote Config Cache
 .swiftlint/RemoteConfigCache

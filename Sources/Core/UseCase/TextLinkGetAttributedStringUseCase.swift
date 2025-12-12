@@ -2,8 +2,8 @@
 //  TextLinkGetAttributedStringUseCase.swift
 //  SparkComponentTextLink
 //
-//  Created by robin.lemaire on 05/12/2023.
-//  Copyright © 2023 Leboncoin. All rights reserved.
+//  Created by robin.lemaire on 25/11/2025.
+//  Copyright © 2025 Leboncoin. All rights reserved.
 //
 
 import Foundation
@@ -14,91 +14,113 @@ import SparkTheming
 // sourcery: AutoMockable, AutoMockTest
 protocol TextLinkGetAttributedStringUseCaseable {
 
-    // sourcery: textColorToken = "Identical"
+    // sourcery: theme = "Identical"
     func execute(
-        frameworkType: FrameworkType,
-        text: String,
-        textColorToken: any ColorToken,
-        textHighlightRange: NSRange?,
-        isHighlighted: Bool,
+        theme: any Theme,
+        intent: TextLinkIntent,
         variant: TextLinkVariant,
-        typographies: TextLinkTypographies
-    ) -> AttributedStringEither
+        typography: TextLinkTypography,
+        text: String,
+        textHighlightRange: NSRange?,
+        isHighlighted: Bool
+    ) -> AttributedString
+
+    // sourcery: theme = "Identical"
+    func executeUI(
+        theme: any Theme,
+        intent: TextLinkIntent,
+        variant: TextLinkVariant,
+        typography: TextLinkTypography,
+        text: String,
+        textHighlightRange: NSRange?,
+        isHighlighted: Bool
+    ) -> NSAttributedString
 }
 
 struct TextLinkGetAttributedStringUseCase: TextLinkGetAttributedStringUseCaseable {
 
     // MARK: - Properties
 
-    private let getUnderlineUseCase: TextLinkGetUnderlineUseCaseable
+    private let colorUseCase: any TextLinkGetColorUseCaseable
+    private let typographiesUseCase: any TextLinkGetTypographiesUseCaseable
+    private let getUnderlineStyleUseCase: any TextLinkGetUnderlineStyleUseCaseable
 
     // MARK: - Initialization
 
-    init(getUnderlineUseCase: TextLinkGetUnderlineUseCaseable = TextLinkGetUnderlineUseCase()) {
-        self.getUnderlineUseCase = getUnderlineUseCase
+    init(
+        colorUseCase: any TextLinkGetColorUseCaseable = TextLinkGetColorUseCase(),
+        typographiesUseCase: any TextLinkGetTypographiesUseCaseable = TextLinkGetTypographiesUseCase(),
+        getUnderlineStyleUseCase: any TextLinkGetUnderlineStyleUseCaseable = TextLinkGetUnderlineStyleUseCase()
+    ) {
+        self.colorUseCase = colorUseCase
+        self.typographiesUseCase = typographiesUseCase
+        self.getUnderlineStyleUseCase = getUnderlineStyleUseCase
     }
 
     // MARK: - Methods
 
     func execute(
-        frameworkType: FrameworkType,
-        text: String,
-        textColorToken: any ColorToken,
-        textHighlightRange: NSRange?,
-        isHighlighted: Bool,
+        theme: any Theme,
+        intent: TextLinkIntent,
         variant: TextLinkVariant,
-        typographies: TextLinkTypographies
-    ) -> AttributedStringEither {
-        let underlineStyle = self.getUnderlineUseCase.execute(
+        typography: TextLinkTypography,
+        text: String,
+        textHighlightRange: NSRange?,
+        isHighlighted: Bool
+    ) -> AttributedString {
+        let properties = self.properties(
+            theme: theme,
+            intent: intent,
             variant: variant,
+            typography: typography,
             isHighlighted: isHighlighted
         )
 
-        // Two possibilities:
-        // - Without range: Add highlight font and add underline from variant for all text
-        // - With range: Add highlight font and add underline from variant for range text, and normal for other.
-        switch frameworkType {
-        case .uiKit:
-            let attributedString = self.makeNSAttributedString(
-                text: text,
-                textColorToken: textColorToken,
-                textHighlightRange: textHighlightRange,
-                underlineStyle: underlineStyle,
-                typographies: typographies
-            )
-            return .left(attributedString)
+        var attributedString = AttributedString(text)
+        attributedString.foregroundColor = properties.colorToken.color
 
-        case .swiftUI:
-            let attributedString = self.makerAttributedString(
-                text: text,
-                textColorToken: textColorToken,
-                textHighlightRange: textHighlightRange,
-                underlineStyle: underlineStyle,
-                typographies: typographies
-            )
+        if let textHighlightRangeTemp = textHighlightRange,
+           let textHighlightRange = Range(textHighlightRangeTemp, in: attributedString) {
 
-            return .right(attributedString)
+            attributedString.font = properties.typographies.normal.font
+
+            attributedString[textHighlightRange].font = properties.typographies.highlight.font
+            attributedString[textHighlightRange].underlineStyle = properties.underlineStyle
+
+        } else {
+            attributedString.font = properties.typographies.highlight.font
+            attributedString.underlineStyle = properties.underlineStyle
         }
+
+        return attributedString
     }
 
-    // MARK: - Maker
-
-    private func makeNSAttributedString(
+    func executeUI(
+        theme: any Theme,
+        intent: TextLinkIntent,
+        variant: TextLinkVariant,
+        typography: TextLinkTypography,
         text: String,
-        textColorToken: any ColorToken,
         textHighlightRange: NSRange?,
-        underlineStyle: NSUnderlineStyle?,
-        typographies: TextLinkTypographies
+        isHighlighted: Bool
     ) -> NSAttributedString {
+        let properties = self.properties(
+            theme: theme,
+            intent: intent,
+            variant: variant,
+            typography: typography,
+            isHighlighted: isHighlighted
+        )
+
         var attributedString: NSMutableAttributedString
-        let textColor = textColorToken.uiColor
+        let textColor = properties.colorToken.uiColor
 
         var highlightAttributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: textColor,
-            .font: typographies.highlight.uiFont
+            .font: properties.typographies.highlight.uiFont
         ]
 
-        if let underlineStyle {
+        if let underlineStyle = properties.underlineStyle {
             highlightAttributes[.underlineStyle] = underlineStyle.rawValue
             highlightAttributes[.underlineColor] = textColor
         }
@@ -106,7 +128,7 @@ struct TextLinkGetAttributedStringUseCase: TextLinkGetAttributedStringUseCaseabl
         if let textHighlightRange, text.count >= textHighlightRange.upperBound {
             let normalAttributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: textColor,
-                .font: typographies.normal.uiFont
+                .font: properties.typographies.normal.uiFont
             ]
 
             attributedString = NSMutableAttributedString(
@@ -129,28 +151,37 @@ struct TextLinkGetAttributedStringUseCase: TextLinkGetAttributedStringUseCaseabl
         return attributedString
     }
 
-    private func makerAttributedString(
-        text: String,
-        textColorToken: any ColorToken,
-        textHighlightRange: NSRange?,
-        underlineStyle: NSUnderlineStyle?,
-        typographies: TextLinkTypographies
-    ) -> AttributedString {
-        var attributedString = AttributedString(text)
-        attributedString.foregroundColor = textColorToken.color
+    // MARK: - Private Methods
 
-        if let textHighlightRangeTemp = textHighlightRange,
-           let textHighlightRange = Range(textHighlightRangeTemp, in: attributedString) {
-            attributedString.font = typographies.normal.font
+    private typealias Properties = (
+        colorToken: any ColorToken,
+        typographies: TextLinkTypographies,
+        underlineStyle: NSUnderlineStyle?
+    )
 
-            attributedString[textHighlightRange].font = typographies.highlight.font
-            attributedString[textHighlightRange].underlineStyle = underlineStyle
+    private func properties(
+        theme: any Theme,
+        intent: TextLinkIntent,
+        variant: TextLinkVariant,
+        typography: TextLinkTypography,
+        isHighlighted: Bool
+    ) -> Properties {
 
-        } else {
-            attributedString.font = typographies.highlight.font
-            attributedString.underlineStyle = underlineStyle
-        }
+        let colors = self.colorUseCase.execute(
+            theme: theme,
+            intent: intent,
+            isHighlighted: isHighlighted
+        )
 
-        return attributedString
+        let typographies = self.typographiesUseCase.execute(
+            theme: theme,
+            typography: typography)
+
+        let underlineStyle = self.getUnderlineStyleUseCase.execute(
+            variant: variant,
+            isHighlighted: isHighlighted
+        )
+
+        return (colors, typographies, underlineStyle)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  TextLinkUIView.swift
+//  SparkUITextLink.swift
 //  SparkComponentTextLink
 //
 //  Created by robin.lemaire on 07/12/2023.
@@ -12,8 +12,50 @@ import SwiftUI
 @_spi(SI_SPI) import SparkCommon
 import SparkTheming
 
-/// The UIKit version for the text link.
-public final class TextLinkUIView: UIControl {
+/// A textlink is a reference to a resource.
+///
+/// It can be external (e.g. a different web page) or internal (e.g. a specific element in the current page).
+///
+/// ## Example of usage
+///
+/// ```swift
+/// let theme: SparkTheming.Theme = MyTheme()
+///
+/// let textLink = SparkUITextLink(theme: self.theme)
+/// textLink.alignment = .leadingImage
+/// textLink.image = UIImage(systemName: "pencil")
+/// textLink.intent = .main
+/// textLink.text = "My TextLing"
+/// textLink.textHighlightRange = NSRange(location: 0, length: 2)
+/// textLink.typography = .caption
+/// textLink.variant = .underline
+///
+/// textLink.addAction(.init(handler: { _ in
+///    // Your action
+/// }), for: .touchUpInside)
+///
+/// self.addSubview(icon)
+/// ```
+///
+/// ## Accessibility
+///
+/// By default, the **accessibilityLabel** is equals to the text.
+/// To override this value, you need to set a new **accessibilityLabel**.
+///
+/// The image is not accessible.
+///
+/// ## Rendering
+///
+/// - With image:
+/// ![TextLink rendering.](textlink_with_image.png)
+///
+/// - Without image:
+/// ![TextLink rendering.](textlink_without_image.png)
+///
+/// - With a long text:
+/// ![TextLink rendering.](textlink_with_long_text.png)
+///
+public final class SparkUITextLink: UIControl {
 
     // MARK: - Components
 
@@ -53,85 +95,51 @@ public final class TextLinkUIView: UIControl {
         imageView.contentMode = .scaleAspectFit
         imageView.tintAdjustmentMode = .normal
         imageView.accessibilityIdentifier = TextLinkAccessibilityIdentifier.image
+        imageView.isAccessibilityElement = false
         return imageView
     }()
 
     private let imageBottomSpaceView = UIView()
 
-    private lazy var textLabel: UILabel = {
+    /// The UILabel used to display the text.
+    ///
+    /// Please **do not set a text** in this label but use
+    /// the ``text`` directly on the ``SparkUITextLink``.
+    public private(set) var textLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = self.numberOfLines
-        label.lineBreakMode = self.lineBreakMode
-        label.textAlignment = self.textAlignment
+        label.lineBreakMode = .byTruncatingTail
+        label.textAlignment = .natural
         label.adjustsFontForContentSizeCategory = true
         label.accessibilityIdentifier = TextLinkAccessibilityIdentifier.text
+        label.setContentCompressionResistancePriority(
+            .required,
+            for: .vertical
+        )
+        label.setContentCompressionResistancePriority(
+            .required,
+            for: .horizontal
+        )
+        label.isAccessibilityElement = false
         return label
     }()
 
-    /// The tap publisher. Alternatively, you can use the native **action** (addAction) or **target** (addTarget).
-    public var tapPublisher: UIControl.EventPublisher {
-        return self.publisher(for: .touchUpInside)
-    }
-
     // MARK: - Public Properties
+
+    private let tapSubject = PassthroughSubject<Void, Never>()
+    /// The publisher used to notify when user tap on textlink.
+    public private(set) lazy var tapPublisher: AnyPublisher<Void, Never> = self.tapSubject.eraseToAnyPublisher()
 
     /// The spark theme of the text link.
     public var theme: any Theme {
-        get {
-            return self.viewModel.theme
-        }
-        set {
-            self.viewModel.theme = newValue
+        didSet {
+            self.viewModel.theme = self.theme
         }
     }
 
-    /// The text of the text link.
-    public var text: String {
-        get {
-            return self.viewModel.text
-        }
-        set {
-            self.viewModel.text = newValue
-        }
-    }
-
-    /// The intent of the text link.
-    public var intent: TextLinkIntent {
-        get {
-            return self.viewModel.intent
-        }
-        set {
-            self.viewModel.intent = newValue
-        }
-    }
-
-    /// The optional range to specify the highlighted part of the text link.
-    public var textHighlightRange: NSRange? {
-        get {
-            return self.viewModel.textHighlightRange
-        }
-        set {
-            self.viewModel.textHighlightRange = newValue
-        }
-    }
-
-    /// The typography of the text link.
-    public var typography: TextLinkTypography {
-        get {
-            return self.viewModel.typography
-        }
-        set {
-            self.viewModel.typography = newValue
-        }
-    }
-
-    /// The variant of the text link.
-    public var variant: TextLinkVariant {
-        get {
-            return self.viewModel.variant
-        }
-        set {
-            self.viewModel.variant = newValue
+    /// The alignment of the text link.
+    public var alignment: TextLinkAlignment = .default {
+        didSet {
+            self.updateAlignment()
         }
     }
 
@@ -142,34 +150,10 @@ public final class TextLinkUIView: UIControl {
         }
     }
 
-    /// The alignment of the text link.
-    public var alignment: TextLinkAlignment {
-        get {
-            return self.viewModel.alignment
-        }
-        set {
-            self.viewModel.alignment = newValue
-        }
-    }
-
-    /// The text  alignment  of the textlink. Default is **.natural**.
-    public var textAlignment: NSTextAlignment = .natural {
+    /// The intent of the text link.
+    public var intent: TextLinkIntent = .default {
         didSet {
-            self.textLabel.textAlignment = self.textAlignment
-        }
-    }
-
-    /// The line break mode of the textlink. Default is **.byTruncatingTail**.
-    public var lineBreakMode: NSLineBreakMode = .byTruncatingTail {
-        didSet {
-            self.textLabel.lineBreakMode = self.lineBreakMode
-        }
-    }
-
-    /// The number of lines of the textlink. Default is **1**.
-    public var numberOfLines: Int = 1 {
-        didSet {
-            self.textLabel.numberOfLines = self.numberOfLines
+            self.viewModel.intent = self.intent
         }
     }
 
@@ -182,30 +166,53 @@ public final class TextLinkUIView: UIControl {
             super.isHighlighted = newValue
             self.viewModel.isHighlighted = newValue
 
-            self.updateExtendedPressedBackground(
-                layer: &self.hoverLayer,
-                viewModel: self.viewModel
-            )
+            self.updateExtendedPressedBackground()
         }
     }
 
-    public override var accessibilityLabel: String? {
+    /// The text of the textLink.
+    /// Displayed at the top of the view.
+    ///
+    /// > This will also change the **accessibilityLabel** of the components.
+    public var text: String? {
         get {
-            return self.textLabel.accessibilityLabel
+            return self.viewModel.text
         }
         set {
-            self.textLabel.accessibilityLabel = newValue
+            self.viewModel.text = newValue
+            self.accessibilityLabel = newValue
+        }
+    }
+
+    /// The optional range to specify the highlighted part of the text link.
+    public var textHighlightRange: NSRange? {
+        didSet {
+            self.viewModel.textHighlightRange = self.textHighlightRange
+        }
+    }
+
+    /// The typography of the text link.
+    public var typography: TextLinkTypography = .default {
+        didSet {
+            self.viewModel.typography = self.typography
+        }
+    }
+
+    /// The variant of the text link.
+    public var variant: TextLinkVariant = .default {
+        didSet {
+            self.viewModel.variant = self.variant
         }
     }
 
     // MARK: - Private Properties
 
-    private let viewModel: TextLinkViewModel
+    private let viewModel = TextLinkUIViewModel()
 
     private var imageTopSpaceViewConstraint: NSLayoutConstraint?
     private var imageViewHeightConstraint: NSLayoutConstraint?
 
-    @ScaledUIMetric private var contentStackViewSpacing: CGFloat = 0
+    @LimitedScaledUIMetric private var spacing: CGFloat = 0
 
     private var hoverLayer: CAShapeLayer?
 
@@ -213,38 +220,36 @@ public final class TextLinkUIView: UIControl {
 
     // MARK: - Initialization
 
-    /// Initialize a new text link view.
+    /// Create an icon with an image.
+    ///
     /// - Parameters:
-    ///   - theme: The spark theme of the text link.
-    ///   - text: The text of the text link.
-    ///   - textHighlightRange: The optional range to specify the highlighted part of the text link.
-    ///   - intent: The intent of the text link.
-    ///   - typography: The typography of the text link.
-    ///   - variant: The variant of the text link.
-    ///   - image: The optional image of the text link..
-    ///   - alignment: The alignment of the content of the textlink: image on left or right of the text.
-    public init(
-        theme: any Theme,
-        text: String,
-        textHighlightRange: NSRange? = nil,
-        intent: TextLinkIntent,
-        typography: TextLinkTypography,
-        variant: TextLinkVariant,
-        image: UIImage? = nil,
-        alignment: TextLinkAlignment = .leadingImage
-    ) {
-        self.viewModel = .init(
-            for: .uiKit,
-            theme: theme,
-            text: text,
-            textHighlightRange: textHighlightRange,
-            intent: intent,
-            typography: typography,
-            variant: variant,
-            alignment: alignment
-        )
-
-        self.image = image
+    ///   - theme: The current theme.
+    ///
+    /// Implementation example :
+    /// ```swift
+    /// let theme: SparkTheming.Theme = MyTheme()
+    ///
+    /// let textLink = SparkUITextLink(theme: self.theme)
+    /// textLink.alignment = .leadingImage
+    /// textLink.image = UIImage(systemName: "pencil")
+    /// textLink.intent = .main
+    /// textLink.text = "My TextLing"
+    /// textLink.textHighlightRange = NSRange(location: 0, length: 2)
+    /// textLink.typography = .caption
+    /// textLink.variant = .underline
+    ///
+    /// textLink.addAction(.init(handler: { _ in
+    ///    // Your action
+    /// }), for: .touchUpInside)    
+    ///
+    /// self.addSubview(icon)
+    /// ```
+    ///
+    /// ## Rendering
+    ///
+    /// ![TextLink rendering.](textlink_with_image.png)
+    public init(theme: any Theme) {
+        self.theme = theme
 
         super.init(frame: .zero)
 
@@ -263,9 +268,8 @@ public final class TextLinkUIView: UIControl {
         // Accessibility
         self.accessibilityIdentifier = TextLinkAccessibilityIdentifier.view
 
-        // View properties
-        self.backgroundColor = .clear
-        self.updateImage()
+        // Setup action
+        self.setupAction()
 
         // Setup constraints
         self.setupConstraints()
@@ -276,11 +280,38 @@ public final class TextLinkUIView: UIControl {
         // Setup accessibility
         self.setupAccessibility()
 
+        // Update
+        self.updateImage()
+        self.updateAlignment()
+
         // Setup subscriptions
         self.setupSubscriptions()
 
         // Load view model
-        self.viewModel.load()
+        self.viewModel.setup(
+            theme: self.theme,
+            intent: self.intent,
+            text: self.text ?? "",
+            textHighlightRange: self.textHighlightRange,
+            typography: self.typography,
+            variant: self.variant
+        )
+    }
+
+    // MARK: - Action
+
+    private func setupAction() {
+        self.addAction(.init(handler: { [weak self] _ in
+            guard let self else { return }
+
+            // Action
+            self.tapSubject.send()
+
+            // Haptic
+            let generator = UIImpactFeedbackGenerator(style: .light)
+            generator.impactOccurred()
+
+        }), for: .touchUpInside)
     }
 
     // MARK: - Constraints
@@ -326,148 +357,42 @@ public final class TextLinkUIView: UIControl {
     }
 
     // MARK: - Accessibility
+
     private func setupAccessibility() {
         self.isAccessibilityElement = true
         self.accessibilityTraits.insert(.link)
-        if self.image != nil {
-            self.accessibilityContainerType = .semanticGroup
-            self.accessibilityTraits.insert(.image)
-        }
-    }
-
-    // MARK: - Instrinsic Content Size
-
-    public override var intrinsicContentSize: CGSize {
-        return .init(
-            width: self.frame.width,
-            height: CGFloat.maximum(self.imageContentStackView.frame.height, self.textLabel.frame.height)
-        )
     }
 
     // MARK: - Update UI
 
+    private func updateAlignment() {
+        self.contentStackView.semanticContentAttribute = self.alignment.isTrailingImage ? .forceRightToLeft : .forceLeftToRight
+    }
+
     private func updateImage() {
         self.imageContentStackView.isHidden = self.image == nil
         self.imageView.image = self.image
-        if self.image == nil {
-            self.accessibilityTraits.remove(.image)
-            self.accessibilityContainerType = .none
-        } else {
-            self.accessibilityTraits.insert(.image)
-            self.accessibilityContainerType = .semanticGroup
-        }
     }
 
     private func updateContentStackViewSpacing() {
-        // Reload spacing only if value changed and constraint is active
-        if self.contentStackViewSpacing != self.contentStackView.spacing {
-            self.contentStackView.spacing = contentStackViewSpacing
-            self.invalidateIntrinsicContentSize()
-        }
+        self.contentStackView.spacing = self.spacing
     }
 
-    // MARK: - Subscribe
-
-    private func setupSubscriptions() {
-        // Attributed Text
-        self.viewModel.$attributedText.subscribe(in: &self.subscriptions) { [weak self] attributedText in
-            guard let self, let attributedText else { return }
-
-            self.textLabel.attributedText = attributedText.leftValue
-        }
-
-        // Spacing
-        self.viewModel.$spacing.subscribe(in: &self.subscriptions) { [weak self] spacing in
-            guard let self else { return }
-
-            self.contentStackViewSpacing = spacing
-            self._contentStackViewSpacing.update(traitCollection: self.traitCollection)
-
-            self.updateContentStackViewSpacing()
-        }
-
-        // Image Size
-        self.viewModel.$imageSize.subscribe(in: &self.subscriptions) { [weak self] imageSize in
-            guard let self, let imageSize else { return }
-
-            self.imageViewHeightConstraint?.constant = imageSize.size
-            self.imageView.updateConstraintsIfNeeded()
-
-            self.imageTopSpaceViewConstraint?.constant = imageSize.padding
-            self.imageTopSpaceView.updateConstraintsIfNeeded()
-        }
-
-        // Image Tint Color
-        self.viewModel.$imageTintColor.subscribe(in: &self.subscriptions) { [weak self] imageTintColor in
-            guard let self else { return }
-
-            self.imageView.tintColor = imageTintColor.uiColor
-        }
-
-        // Image Position
-        self.viewModel.$isTrailingImage.subscribe(in: &self.subscriptions) { [weak self] isTrailingImage in
-            guard let self else { return }
-
-            self.contentStackView.semanticContentAttribute = isTrailingImage ? .forceRightToLeft : .forceLeftToRight
-        }
-
-        // Dot
-        self.viewModel.$dim.subscribe(in: &self.subscriptions) { [weak self] dim in
-            guard let self else { return }
-
-            self.alpha = dim
-        }
-    }
-
-    // MARK: - Label priorities
-
-    public func setLabelContentCompressionResistancePriority(
-        _ priority: UILayoutPriority,
-        for axis: NSLayoutConstraint.Axis
-    ) {
-        self.textLabel.setContentCompressionResistancePriority(priority, for: axis)
-    }
-
-    public func setLabelContentHuggingPriority(
-        _ priority: UILayoutPriority,
-        for axis: NSLayoutConstraint.Axis
-    ) {
-        self.textLabel.setContentHuggingPriority(priority, for: axis)
-    }
-
-    // MARK: - Trait Collection
-
-    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        // Update spacings
-        self._contentStackViewSpacing.update(traitCollection: self.traitCollection)
-        self.updateContentStackViewSpacing()
-
-        self.viewModel.contentSizeCategoryDidUpdate()
-    }
-}
-
-extension UIControl {
-
-    func updateExtendedPressedBackground(
-        layer: inout CAShapeLayer?,
-        viewModel: TextLinkViewModel
-    ) {
+    private func updateExtendedPressedBackground() {
         // Remove previous layer
-        layer?.removeFromSuperlayer()
+        self.hoverLayer?.removeFromSuperlayer()
 
         if self.isHighlighted {
-            let backgroundColor = viewModel.hoverStyle.backgroundColor.uiColor.withAlphaComponent(
-                viewModel.hoverStyle.dim
+            let backgroundColor = self.viewModel.hoverStyle.backgroundColor.uiColor.withAlphaComponent(
+                self.viewModel.hoverStyle.dim
             )
 
-            let radius = viewModel.hoverStyle.cornerRadius
+            let radius = self.viewModel.hoverStyle.cornerRadius
 
             let path = UIBezierPath(
                 roundedRect: self.bounds.insetBy(
-                    dx: -viewModel.hoverStyle.horizontalPadding,
-                    dy: -viewModel.hoverStyle.verticalPadding
+                    dx: -self.viewModel.hoverStyle.horizontalPadding,
+                    dy: -self.viewModel.hoverStyle.verticalPadding
                 ),
                 byRoundingCorners: [
                     .topLeft,
@@ -486,7 +411,67 @@ extension UIControl {
             shape.fillColor = backgroundColor.resolvedColor(with: self.traitCollection).cgColor
 
             self.layer.addSublayer(shape)
-            layer = shape
+            self.hoverLayer = shape
         }
+    }
+
+    // MARK: - Subscribe
+
+    private func setupSubscriptions() {
+        // Attributed Text
+        self.viewModel.$attributedString.subscribe(in: &self.subscriptions) { [weak self] attributedString in
+            guard let self else { return }
+
+            self.textLabel.attributedText = attributedString
+        }
+
+        // Spacing
+        self.viewModel.$spacing.subscribe(in: &self.subscriptions) { [weak self] spacing in
+            guard let self else { return }
+
+            self._spacing = .init(
+                wrappedValue: spacing,
+                traitCollection: self.traitCollection
+            )
+
+            self.updateContentStackViewSpacing()
+        }
+
+        // Image Size
+        self.viewModel.$imageSize.subscribe(in: &self.subscriptions) { [weak self] imageSize in
+            guard let self else { return }
+
+            self.imageViewHeightConstraint?.constant = imageSize.size
+            self.imageView.updateConstraintsIfNeeded()
+
+            self.imageTopSpaceViewConstraint?.constant = imageSize.padding
+            self.imageTopSpaceView.updateConstraintsIfNeeded()
+        }
+
+        // Image Tint Color
+        self.viewModel.$imageColor.subscribe(in: &self.subscriptions) { [weak self] imageColor in
+            guard let self else { return }
+
+            self.imageView.tintColor(imageColor)
+        }
+
+        // Dot
+        self.viewModel.$dim.subscribe(in: &self.subscriptions) { [weak self] dim in
+            guard let self else { return }
+
+            self.alpha = dim
+        }
+    }
+
+    // MARK: - Trait Collection
+
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        // Update spacings
+        self._spacing.update(traitCollection: self.traitCollection)
+        self.updateContentStackViewSpacing()
+
+        self.viewModel.contentSizeCategoryDidUpdate()
     }
 }

@@ -2,72 +2,354 @@
 //  TextLinkGetHoverStyleUseCaseTests.swift
 //  SparkComponentTextLinkUnitTests
 //
-//  Created by robin.lemaire on 22/09/2025.
+//  Created by robin.lemaire on 25/11/2025.
 //  Copyright © 2025 Leboncoin. All rights reserved.
 //
 
 import XCTest
-import SwiftUI
-@testable import SparkComponentTextLink
-import SparkTheming
+@_spi(SI_SPI) import SparkTheming
 @_spi(SI_SPI) import SparkThemingTesting
+@testable import SparkComponentTextLink
 
 final class TextLinkGetHoverStyleUseCaseTests: XCTestCase {
 
+    // MARK: - Properties
+
+    private let theme = ThemeGeneratedMock.mocked()
+    private let useCase = TextLinkGetHoverStyleUseCase()
+
     // MARK: - Tests
 
-    func test_execute_for_all_intents() {
+    func test_execute_accent_intent() {
         // GIVEN
-        let useCase = TextLinkGetHoverStyleUseCase()
-        let themeMock = ThemeGeneratedMock.mocked()
-
-        let givenIntents = TextLinkIntent.allCases
+        let intent = TextLinkIntent.accent
 
         // WHEN
-        for givenIntent in givenIntents {
-            let hoverStyle = useCase.execute(
-                theme: themeMock,
-                intent: givenIntent
-            )
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
 
-            let expectedHoverStyle = givenIntent.expectedHoverStyle(
-                from: themeMock
-            )
-
-            // THEN
-            XCTAssertEqual(
-                hoverStyle,
-                expectedHoverStyle,
-                "Wrong hover style for .\(givenIntent) case"
-            )
-        }
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.accent.accent))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
     }
-}
 
-// MARK: - Extension
+    func test_execute_alert_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.alert
 
-private extension TextLinkIntent {
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
 
-    func expectedHoverStyle(from themeMock: ThemeGeneratedMock) -> TextLinkHoverStyle {
-        let backgroundColor = switch self {
-        case .accent, .accentContainer, .onAccentContainer: themeMock.colors.accent.accent
-        case .alert, .alertContainer: themeMock.colors.feedback.alert
-        case .basic, .basicContainer: themeMock.colors.basic.basic
-        case .danger, .dangerContainer: themeMock.colors.feedback.error
-        case .info, .infoContainer: themeMock.colors.feedback.info
-        case .main, .mainContainer: themeMock.colors.main.main
-        case .neutral, .neutralContainer: themeMock.colors.feedback.neutral
-        case .surface, .onSurface: themeMock.colors.base.surface
-        case .success, .successContainer: themeMock.colors.feedback.success
-        case .support, .supportContainer: themeMock.colors.support.support
-        }
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.feedback.alert))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
 
-        return TextLinkHoverStyle(
-            horizontalPadding: themeMock.layout.spacing.medium,
-            verticalPadding: themeMock.layout.spacing.small,
-            cornerRadius: themeMock.border.radius.medium,
-            backgroundColor: backgroundColor,
-            dim: themeMock.dims.dim5
-        )
+    func test_execute_basic_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.basic
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.basic.basic))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_danger_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.danger
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.feedback.error))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_info_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.info
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.feedback.info))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_main_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.main
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.main.main))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_neutral_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.neutral
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.feedback.neutral))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_success_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.success
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.feedback.success))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_support_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.support
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.support.support))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_custom_intent() {
+        // GIVEN
+        let customColorToken = ColorTokenGeneratedMock.red()
+        let intent = TextLinkIntent.custom(customColorToken)
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(customColorToken))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    // MARK: - Deprecated Tests
+
+    func test_execute_accent_container_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.accentContainer
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.accent.accent))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_alert_container_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.alertContainer
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.feedback.alert))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_basic_container_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.basicContainer
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.basic.basic))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_danger_container_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.dangerContainer
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.feedback.error))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_info_container_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.infoContainer
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.feedback.info))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_main_container_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.mainContainer
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.main.main))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_neutral_container_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.neutralContainer
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.feedback.neutral))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_on_accent_container_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.onAccentContainer
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.accent.accent))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_on_surface_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.onSurface
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.base.surface))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_success_container_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.successContainer
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.feedback.success))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_support_container_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.supportContainer
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.support.support))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
+    }
+
+    func test_execute_surface_intent() {
+        // GIVEN
+        let intent = TextLinkIntent.surface
+
+        // WHEN
+        let result = self.useCase.execute(theme: self.theme, intent: intent)
+
+        // THEN
+        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
+        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
+        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
+        XCTAssertTrue(result.backgroundColor.equals(theme.colors.base.surface))
+        XCTAssertEqual(result.dim, theme.dims.dim5)
     }
 }
