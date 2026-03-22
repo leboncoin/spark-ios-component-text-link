@@ -12,7 +12,6 @@ import SparkTheming
 public enum TextLinkIntent: Equatable {
     case accent
     case alert
-    case basic
     case danger
     case info
     case main
@@ -50,8 +49,8 @@ public enum TextLinkIntent: Equatable {
 
     // MARK: - Properties
 
-    /// The default case. Equals to **.basic**.
-    public static let `default`: Self = .basic
+    /// The default case. Equals to **.support**.
+    public static let `default`: Self = .support
 
     // MARK: - Equatable
 
@@ -59,7 +58,6 @@ public enum TextLinkIntent: Equatable {
         return switch (lhs, rhs) {
         case (.accent, .accent): true
         case (.alert, .alert): true
-        case (.basic, .basic): true
         case (.danger, .danger): true
         case (.info, .info): true
         case (.main, .main): true

@@ -12,7 +12,6 @@ import SparkTheming
 @_spi(SI_SPI) public enum TextLinkTestingIntent: CaseIterable {
     case accent
     case alert
-    case basic
     case danger
     case info
     case main
@@ -23,8 +22,8 @@ import SparkTheming
 
     // MARK: - Properties
 
-    /// The default case. Equals to **.basic**.
-    public static let `default`: Self = .basic
+    /// The default case. Equals to **.support**.
+    public static let `default`: Self = .support
 
     // MARK: - Methods
 
@@ -32,7 +31,6 @@ import SparkTheming
         switch self {
         case .accent: .accent
         case .alert: .alert
-        case .basic: .basic
         case .danger: .danger
         case .info: .info
         case .main: .main

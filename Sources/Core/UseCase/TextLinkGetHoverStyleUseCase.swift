@@ -29,7 +29,7 @@ struct TextLinkGetHoverStyleUseCase: TextLinkGetHoverStyleUseCaseable {
         let backgroundColor = switch intent {
         case .accent, .accentContainer, .onAccentContainer: colors.accent.accent
         case .alert, .alertContainer: colors.feedback.alert
-        case .basic, .basicContainer: colors.basic.basic
+        case .basicContainer: colors.basic.basic
         case .danger, .dangerContainer: colors.feedback.error
         case .info, .infoContainer: colors.feedback.info
         case .main, .mainContainer: colors.main.main
