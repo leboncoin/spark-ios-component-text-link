@@ -140,21 +140,6 @@ final class TextLinkGetHoverStyleUseCaseTests: XCTestCase {
         XCTAssertEqual(result.dim, theme.dims.dim5)
     }
 
-    func test_execute_support_intent() {
-        // GIVEN
-        let intent = TextLinkIntent.support
-
-        // WHEN
-        let result = self.useCase.execute(theme: self.theme, intent: intent)
-
-        // THEN
-        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
-        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
-        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
-        XCTAssertTrue(result.backgroundColor.equals(theme.colors.support.support))
-        XCTAssertEqual(result.dim, theme.dims.dim5)
-    }
-
     func test_execute_custom_intent() {
         // GIVEN
         let customColorToken = ColorTokenGeneratedMock.red()
@@ -320,21 +305,6 @@ final class TextLinkGetHoverStyleUseCaseTests: XCTestCase {
         XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
         XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
         XCTAssertTrue(result.backgroundColor.equals(theme.colors.feedback.success))
-        XCTAssertEqual(result.dim, theme.dims.dim5)
-    }
-
-    func test_execute_support_container_intent() {
-        // GIVEN
-        let intent = TextLinkIntent.supportContainer
-
-        // WHEN
-        let result = self.useCase.execute(theme: self.theme, intent: intent)
-
-        // THEN
-        XCTAssertEqual(result.horizontalPadding, theme.layout.spacing.medium)
-        XCTAssertEqual(result.verticalPadding, theme.layout.spacing.small)
-        XCTAssertEqual(result.cornerRadius, theme.border.radius.medium)
-        XCTAssertTrue(result.backgroundColor.equals(theme.colors.support.support))
         XCTAssertEqual(result.dim, theme.dims.dim5)
     }
 

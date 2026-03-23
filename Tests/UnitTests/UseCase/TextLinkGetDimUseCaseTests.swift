@@ -391,36 +391,4 @@ final class TextLinkGetDimUseCaseTests: XCTestCase {
         // THEN
         XCTAssertEqual(result, theme.dims.dim1)
     }
-
-    func test_execute_support_container_not_highlighted() {
-        // GIVEN
-        let intent = TextLinkIntent.supportContainer
-        let isHighlighted = false
-
-        // WHEN
-        let result = self.useCase.execute(
-            theme: self.theme,
-            intent: intent,
-            isHighlighted: isHighlighted
-        )
-
-        // THEN
-        XCTAssertEqual(result, theme.dims.none)
-    }
-
-    func test_execute_support_container_highlighted() {
-        // GIVEN
-        let intent = TextLinkIntent.supportContainer
-        let isHighlighted = true
-
-        // WHEN
-        let result = self.useCase.execute(
-            theme: self.theme,
-            intent: intent,
-            isHighlighted: isHighlighted
-        )
-
-        // THEN
-        XCTAssertEqual(result, theme.dims.dim1)
-    }
 }

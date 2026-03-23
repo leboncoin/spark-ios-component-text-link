@@ -53,7 +53,6 @@ struct TextLinkGetColorUseCase: TextLinkGetColorUseCaseable {
             // Deprecated cases
         case .accentContainer, .onAccentContainer: colors.accent.onAccentContainer
         case .alertContainer: colors.feedback.onAlertContainer
-        case .supportContainer: colors.support.onSupportContainer
         case .dangerContainer: colors.feedback.onErrorContainer
         case .infoContainer: colors.feedback.onInfoContainer
         case .mainContainer: colors.main.onMainContainer
