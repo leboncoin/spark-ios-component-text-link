@@ -55,7 +55,7 @@ private extension TextLinkIntent {
         let backgroundColor = switch self {
         case .accent, .accentContainer, .onAccentContainer: themeMock.colors.accent.accent
         case .alert, .alertContainer: themeMock.colors.feedback.alert
-        case .basic, .basicContainer: themeMock.colors.basic.basic
+        case .support, .supportContainer: themeMock.colors.support.support
         case .danger, .dangerContainer: themeMock.colors.feedback.error
         case .info, .infoContainer: themeMock.colors.feedback.info
         case .main, .mainContainer: themeMock.colors.main.main

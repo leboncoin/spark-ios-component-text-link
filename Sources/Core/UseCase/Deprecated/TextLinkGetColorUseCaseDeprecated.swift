@@ -37,8 +37,8 @@ struct TextLinkGetColorUseCaseDeprecated: TextLinkGetColorUseCaseDeprecatedable 
         case .alert: isHighlighted ? colors.states.alertPressed : colors.feedback.alert
         case .alertContainer: colors.feedback.onAlertContainer
 
-        case .basic: isHighlighted ? colors.states.basicPressed : colors.basic.basic
-        case .basicContainer: colors.basic.onBasicContainer
+        case .support: isHighlighted ? colors.states.supportPressed : colors.support.support
+        case .supportContainer: colors.support.onSupportContainer
 
         case .danger: isHighlighted ? colors.states.errorPressed : colors.feedback.error
         case .dangerContainer: colors.feedback.onErrorContainer

@@ -29,8 +29,6 @@ public enum TextLinkIntent: Equatable {
     @available(*, deprecated, message: "Use .custom instead.")
     case alertContainer
     @available(*, deprecated, message: "Use .custom instead.")
-    case basicContainer
-    @available(*, deprecated, message: "Use .custom instead.")
     case dangerContainer
     @available(*, deprecated, message: "Use .custom instead.")
     case infoContainer
@@ -67,7 +65,6 @@ public enum TextLinkIntent: Equatable {
         case (.accentContainer, .accentContainer): true
         case (.onAccentContainer, .onAccentContainer): true
         case (.alertContainer, .alertContainer): true
-        case (.basicContainer, .basicContainer): true
         case (.dangerContainer, .dangerContainer): true
         case (.infoContainer, .infoContainer): true
         case (.mainContainer, .mainContainer): true

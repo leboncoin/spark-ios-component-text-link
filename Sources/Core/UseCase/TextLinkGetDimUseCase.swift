@@ -34,7 +34,7 @@ struct TextLinkGetDimUseCase: TextLinkGetDimUseCaseable {
         case .accentContainer,
                 .onAccentContainer,
                 .alertContainer,
-                .basicContainer,
+                .supportContainer,
                 .dangerContainer,
                 .infoContainer,
                 .mainContainer,

@@ -31,7 +31,7 @@ struct TextLinkGetHoverStyleUseCaseDeprecated: TextLinkGetHoverStyleUseCaseDepre
         let backgroundColor = switch intent {
         case .accent, .accentContainer, .onAccentContainer: colors.accent.accent
         case .alert, .alertContainer: colors.feedback.alert
-        case .basic, .basicContainer: colors.basic.basic
+        case .support, .supportContainer: colors.support.support
         case .danger, .dangerContainer: colors.feedback.error
         case .info, .infoContainer: colors.feedback.info
         case .main, .mainContainer: colors.main.main

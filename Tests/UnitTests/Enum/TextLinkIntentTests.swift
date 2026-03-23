@@ -23,7 +23,7 @@ final class TextLinkIntentTests: XCTestCase {
         XCTAssertEqual(defaultIntent, .support, "Default case should be .support")
     }
 
-    func test_equatable_basic_cases() {
+    func test_equatable_support_cases() {
         // GIVEN / WHEN / THEN
         XCTAssertEqual(TextLinkIntent.accent, TextLinkIntent.accent)
         XCTAssertEqual(TextLinkIntent.alert, TextLinkIntent.alert)
@@ -38,7 +38,7 @@ final class TextLinkIntentTests: XCTestCase {
         XCTAssertEqual(TextLinkIntent.accentContainer, TextLinkIntent.accentContainer)
         XCTAssertEqual(TextLinkIntent.onAccentContainer, TextLinkIntent.onAccentContainer)
         XCTAssertEqual(TextLinkIntent.alertContainer, TextLinkIntent.alertContainer)
-        XCTAssertEqual(TextLinkIntent.basicContainer, TextLinkIntent.basicContainer)
+        XCTAssertEqual(TextLinkIntent.supportContainer, TextLinkIntent.supportContainer)
         XCTAssertEqual(TextLinkIntent.dangerContainer, TextLinkIntent.dangerContainer)
         XCTAssertEqual(TextLinkIntent.infoContainer, TextLinkIntent.infoContainer)
         XCTAssertEqual(TextLinkIntent.mainContainer, TextLinkIntent.mainContainer)
@@ -84,7 +84,7 @@ final class TextLinkIntentTests: XCTestCase {
         XCTAssertNotEqual(customIntent1, customIntent2, "Custom intents should not be equal when tokens are not equal")
     }
 
-    func test_equatable_custom_vs_basic_cases() {
+    func test_equatable_custom_vs_support_cases() {
         // GIVEN
         let mockColorToken = ColorTokenGeneratedMock()
         let customIntent = TextLinkIntent.custom(mockColorToken)
