@@ -93,8 +93,6 @@ private extension TextLinkIntent {
         case .onAccentContainer: dimsMock.dim1
         case .alert: dimsMock.none
         case .alertContainer: dimsMock.dim1
-        case .basic: dimsMock.none
-        case .basicContainer: dimsMock.dim1
         case .danger: dimsMock.none
         case .dangerContainer: dimsMock.dim1
         case .info: dimsMock.none

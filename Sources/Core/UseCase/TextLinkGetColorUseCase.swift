@@ -35,8 +35,6 @@ struct TextLinkGetColorUseCase: TextLinkGetColorUseCaseable {
             isHighlighted ? colors.states.accentPressed : colors.accent.accent
         case .alert:
             isHighlighted ? colors.states.alertPressed : colors.feedback.alert
-        case .basic:
-            isHighlighted ? colors.states.basicPressed : colors.basic.basic
         case .danger:
             isHighlighted ? colors.states.errorPressed : colors.feedback.error
         case .info:
@@ -55,7 +53,6 @@ struct TextLinkGetColorUseCase: TextLinkGetColorUseCaseable {
             // Deprecated cases
         case .accentContainer, .onAccentContainer: colors.accent.onAccentContainer
         case .alertContainer: colors.feedback.onAlertContainer
-        case .basicContainer: colors.basic.onBasicContainer
         case .dangerContainer: colors.feedback.onErrorContainer
         case .infoContainer: colors.feedback.onInfoContainer
         case .mainContainer: colors.main.onMainContainer

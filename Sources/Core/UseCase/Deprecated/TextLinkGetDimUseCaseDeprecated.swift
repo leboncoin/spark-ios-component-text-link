@@ -35,7 +35,7 @@ struct TextLinkGetDimUseCaseDeprecated: TextLinkGetDimUseCaseDeprecatedable {
         case .accentContainer,
                 .onAccentContainer,
                 .alertContainer,
-                .basicContainer,
+                .supportContainer,
                 .dangerContainer,
                 .infoContainer,
                 .mainContainer,

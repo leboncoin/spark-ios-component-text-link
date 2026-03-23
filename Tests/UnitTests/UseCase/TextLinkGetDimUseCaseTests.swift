@@ -20,9 +20,9 @@ final class TextLinkGetDimUseCaseTests: XCTestCase {
 
     // MARK: - Tests
 
-    func test_execute_basic_intent_not_highlighted() {
+    func test_execute_support_intent_not_highlighted() {
         // GIVEN
-        let intent = TextLinkIntent.basic
+        let intent = TextLinkIntent.support
         let isHighlighted = false
 
         // WHEN
@@ -36,9 +36,9 @@ final class TextLinkGetDimUseCaseTests: XCTestCase {
         XCTAssertEqual(result, theme.dims.none)
     }
 
-    func test_execute_basic_intent_highlighted() {
+    func test_execute_support_intent_highlighted() {
         // GIVEN
-        let intent = TextLinkIntent.basic
+        let intent = TextLinkIntent.support
         let isHighlighted = true
 
         // WHEN
@@ -200,9 +200,9 @@ final class TextLinkGetDimUseCaseTests: XCTestCase {
         XCTAssertEqual(result, theme.dims.dim1)
     }
 
-    func test_execute_basic_container_not_highlighted() {
+    func test_execute_support_container_not_highlighted() {
         // GIVEN
-        let intent = TextLinkIntent.basicContainer
+        let intent = TextLinkIntent.supportContainer
         let isHighlighted = false
 
         // WHEN
@@ -216,9 +216,9 @@ final class TextLinkGetDimUseCaseTests: XCTestCase {
         XCTAssertEqual(result, theme.dims.none)
     }
 
-    func test_execute_basic_container_highlighted() {
+    func test_execute_support_container_highlighted() {
         // GIVEN
-        let intent = TextLinkIntent.basicContainer
+        let intent = TextLinkIntent.supportContainer
         let isHighlighted = true
 
         // WHEN
@@ -379,38 +379,6 @@ final class TextLinkGetDimUseCaseTests: XCTestCase {
     func test_execute_success_container_highlighted() {
         // GIVEN
         let intent = TextLinkIntent.successContainer
-        let isHighlighted = true
-
-        // WHEN
-        let result = self.useCase.execute(
-            theme: self.theme,
-            intent: intent,
-            isHighlighted: isHighlighted
-        )
-
-        // THEN
-        XCTAssertEqual(result, theme.dims.dim1)
-    }
-
-    func test_execute_support_container_not_highlighted() {
-        // GIVEN
-        let intent = TextLinkIntent.supportContainer
-        let isHighlighted = false
-
-        // WHEN
-        let result = self.useCase.execute(
-            theme: self.theme,
-            intent: intent,
-            isHighlighted: isHighlighted
-        )
-
-        // THEN
-        XCTAssertEqual(result, theme.dims.none)
-    }
-
-    func test_execute_support_container_highlighted() {
-        // GIVEN
-        let intent = TextLinkIntent.supportContainer
         let isHighlighted = true
 
         // WHEN

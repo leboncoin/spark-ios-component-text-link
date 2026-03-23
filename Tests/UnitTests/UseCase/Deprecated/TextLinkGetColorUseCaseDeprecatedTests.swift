@@ -93,8 +93,6 @@ private extension TextLinkIntent {
         case .onAccentContainer: colorsMock.accent.onAccentContainer
         case .alert: colorsMock.states.alertPressed
         case .alertContainer: colorsMock.feedback.onAlertContainer
-        case .basic: colorsMock.states.basicPressed
-        case .basicContainer: colorsMock.basic.onBasicContainer
         case .danger: colorsMock.states.errorPressed
         case .dangerContainer: colorsMock.feedback.onErrorContainer
         case .info: colorsMock.states.infoPressed
@@ -122,8 +120,6 @@ private extension TextLinkIntent {
         case .onAccentContainer: colorsMock.accent.onAccentContainer
         case .alert: colorsMock.feedback.alert
         case .alertContainer: colorsMock.feedback.onAlertContainer
-        case .basic: colorsMock.basic.basic
-        case .basicContainer: colorsMock.basic.onBasicContainer
         case .danger: colorsMock.feedback.error
         case .dangerContainer: colorsMock.feedback.onErrorContainer
         case .info: colorsMock.feedback.info
